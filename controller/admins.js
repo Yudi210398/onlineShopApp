@@ -4,6 +4,7 @@ exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
     path: `/admin/data-produk/`,
+    editing: false,
   });
 };
 
@@ -61,10 +62,19 @@ exports.adminProduks = (req, res, next) => {
 exports.edithProduk = (req, res, next) => {
   let dataQuery = req.query.edit;
   if (!dataQuery) return res.redirect("/");
-  res.render(`admin/edit-produk`, {
-    doctitle: `Input Produk Page`,
-    path: `/admin/data-produk/`,
-    editing: dataQuery,
+  let dataid = +req.params.id;
+  DataAnys.findId(dataid, (produk) => {
+    if (!produk) res.redirect("/");
+    else
+      res.render(`admin/edit-produk`, {
+        doctitle: `Input Produk Page`,
+        path: `/admin/data-produk/`,
+        editing: dataQuery,
+        produk: produk,
+      });
   });
-  console.log(dataQuery);
+};
+
+exports.postEdithProduks = (req, res, next) => {
+  // code
 };

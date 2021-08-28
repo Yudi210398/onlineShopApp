@@ -39,6 +39,7 @@ exports.produks = (req, res, next) => {
 };
 
 exports.cart = (req, res, next) => {
+  console.log(req.query);
   res.render(`shop/cart`, {
     doctitle: `Cart Page`,
     path: `/cart`,

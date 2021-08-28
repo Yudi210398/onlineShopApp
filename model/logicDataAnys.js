@@ -38,8 +38,8 @@ module.exports = class Produkss {
   }
 
   static findId(id, cb) {
-    getFileAnys((dataLoad) => {
-      let dataId = dataLoad.find((p) => p.id === id);
+    getFileAnys((dataloads) => {
+      let dataId = dataloads.find((p) => p.id === id);
       cb(dataId);
     });
   }

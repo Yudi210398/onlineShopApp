@@ -2,27 +2,29 @@
     <link rel="stylesheet" href="/css/form.css" />
 </head>
 <%- include('../includes/nav.ejs') %>
-<main>
+<main> 
   <div class="container">
     <div class="row justify-content-start"> 
       <div class="col-4">
-        <form action="/admin/data" method="POST">
+        <form action="/admin/<% if (editing) { %>edit-produks<% } else { %>data<% }  %>" method="POST">
           <input
-            type="text"
+            type="text" 
             class="form-control"
             name="Nama Produk"
             placeholder="Masukan Nama Produk"
             id="namaProduk"
+            value="<% if (editing) { %><%= produk.namaProduk %> <% } %>"
             required
-          />
- 
+          /> 
+            
           <input
             type="text"
             class="form-control"
             name="Gambar Produk"
             placeholder="Masukan Gambar url"
-            id="gambarProduk"
+            id="gambarProduk" 
             required
+            value="<% if (editing) { %><%= produk.gambarurl %> <% } %>" 
           />
 
           <input
@@ -30,24 +32,28 @@
             min="50"
             class="form-control"
             name="Harga Produk"
-            placeholder="Masukan harga produk"
+            placeholder="<% if (editing) { %><%= produk.harga %><% } else { %>Masukan Harga Produks<% } %>"
             id="hargaProduk"
             required
+              value="<% if (editing) { %><%= produk.harga %> <% } %>"
           />
 
           <div class="form-control">
             <textarea
-              placeholder="Masukan Deskripsi"
+              placeholder="<% if (editing) { %><%= produk.deskripsi %><% } else { %>Deskripsi Produks<% } %>"
               name="deskripsi"
               id="deskripsi"
               cols="40"
               rows="5"
+              value="wkwkw"
               required
             ></textarea>
-          </div>
+          </div> 
 
-          <button type="submit" class="btn btn-success">Submits</button>
-        </form>
+          <button type="submit" class="btn btn-success"><% if (editing) { %>
+          Edit Produk
+          <% } else {%> Tambah Produk<%} %></button>
+        </form> 
       </div>
     </div>
   </div>
