@@ -66,4 +66,5 @@ exports.edithProduk = (req, res, next) => {
     path: `/admin/data-produk/`,
     editing: dataQuery,
   });
+  console.log(dataQuery);
 };
