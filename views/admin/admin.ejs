@@ -1,0 +1,54 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/admin-produks.css" />
+</head>
+<%- include('../includes/nav.ejs') %>
+<br />
+<br />
+<div class="container">
+  <h1 class="mainPage center">Produks main page</h1>
+  <br />
+  <% if (produks.length < 1 ) { %>
+  <h1 class="kosong">Data Tidak ada</h1>
+  <% } %>
+  <div class="row justify-content-center">
+    <% produks.forEach(el => { %>
+    <div class="col-sm-4">
+      <div class="card" style="width: 19rem">
+        <img
+          height="200px"
+          src="<%= el.gambarurl %> "
+          class="card-img-top"
+          alt="mahasiswa"
+        />
+        <div class="card-body">
+          <h5 class="card-title"><%= el.namaProduk %></h5>
+          <p class="card-text"><%= el.deskripsi %></p>
+          <br />
+
+          <div class="jejer">
+            <p class="btn btn-outline-primary adminbtn">Rp. <%= el.harga %></p>
+
+            <a href="/admin/edit-produks">
+              <button
+                type="submit"
+                class="btn btn-outline-warning adminbtn adminbtnedith"
+              >
+                Edit Produks
+              </button>
+            </a>
+            <form action="/admin/hapus-produks" method="POST">
+              <button
+                type="submit"
+                class="btn btn-outline-danger adminbtn adminbtndelete"
+              >
+                delete Produks
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+<%- include('../includes/end.ejs') %>

@@ -1,0 +1,38 @@
+<%- include('../includes/head.ejs') %>
+</head>
+<%- include('../includes/nav.ejs') %>
+    <br />
+    <br />
+    <div class="container">
+    <h1 class="mainPage center">Produks main page</h1>
+    <br />
+    <% if (produks.length < 1 ) { %>
+    <h1 class="kosong">Data Tidak ada</h1>
+    <% } %>
+    <div class="row justify-content-center">
+        <% produks.forEach(el => { %>
+        <div class="col-sm-4"> 
+        <div class="card" style="width: 20rem">
+            <img
+            height="250px"
+            src="<%= el.gambarurl %> "
+            class="card-img-top"
+            alt="mahasiswa"
+            />
+
+            <div class="card-body">
+            <h5 class="display-5 card-title"><%= el.namaProduk %></h5>
+            <p class="card-text"><%= el.deskripsi %></p>
+            <br />
+            <div class="tombol">
+                <p class="btn btn-outline-danger">Rp. <%= el.harga %></p>
+
+                <%- include('../includes/add-list-cart.ejs',{produk :el }) %>
+            </div>
+            </div>
+        </div>
+        </div>
+        <% }) %>
+    </div>
+    </div>
+<%- include('../includes/end.ejs') %>

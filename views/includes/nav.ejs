@@ -1,0 +1,45 @@
+<body> 
+    <nav
+        class="navbar navbar-expand-lg navbar-light"
+        style="background-color: rgb(235, 149, 128)"
+    >
+        <div class="container">
+            <a class="navbar-brand" href="#"
+                ><img src="/css/logo.png" alt="" width="45" height="37"
+            /></a>
+            <button 
+                class="navbar-toggler"  
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ">
+                    <li class="nav-item"> 
+                        <a class="nav-link <%= path === "/" ? "active" : "" %> " aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item"> 
+                        <a class="nav-link <%= path === "/produks" ? "active" : "" %> " aria-current="page" href="/produks">produks</a>
+                    </li>  
+                    <li class="nav-item"> 
+                        <a class="nav-link <%= path === "/cart" ? "active" : "" %> " aria-current="page" href="/cart">Keranjang</a>
+                    </li>  
+                    <li class="nav-item"> 
+                        <a class="nav-link <%= path === "/orders" ? "active" : "" %> " aria-current="page" href="/orders">orders</a>
+                    </li>   
+
+                    <li class="nav-item">
+                        <a class="nav-link <%= path ==='/admin/data-produk/' ? 'active' : '' %> " href="/admin/data-produk">Tambah Produk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= path ==='/admin/admin-produk' ? 'active' : '' %> " href="/admin/admin-produk">admin produks</a>
+                    </li>
+                </ul> 
+            </div>
+        </div>
+    </nav>  

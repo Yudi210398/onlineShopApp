@@ -1,0 +1,23 @@
+<%- include('../includes/head.ejs') %> 
+<link rel="stylesheet" href="/css/produksid.css" />
+</head>
+<%- include('../includes/nav.ejs') %>
+
+    <div class="container">
+    <main class="list">
+        <h1 class="display-5"><%= produk.namaProduk %></h1>
+        <hr />
+        <div>
+        <img src="<%= produk.gambarurl %> " alt="" width="250px" height="300px" />
+        </div>
+        <br />
+        <p class="deskripsi"><%= produk. deskripsi%></p>
+        <br /><br />
+        <div class="tombol">
+        <button class="btn btn-outline-primary">Rp. <%= produk.harga %></button>
+        <%- include('../includes/add-list-cart.ejs') %>
+        </div>
+    </main> 
+</div> 
+
+<%- include('../includes/end.ejs') %>
