@@ -6,5 +6,5 @@ routerAdmin.get("/data-produk", contoller.inputData);
 routerAdmin.post(`/data`, contoller.postData);
 routerAdmin.get(`/admin-produk/`, contoller.adminProduks);
 routerAdmin.get(`/edit-produks/:id`, contoller.edithProduk);
-routerAdmin.post("/edit-produks");
+routerAdmin.post("/edit-produks", contoller.postEdithProduks);
 module.exports = routerAdmin;

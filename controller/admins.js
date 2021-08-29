@@ -29,6 +29,7 @@ exports.postData = (req, res, next) => {
   let deskripsiProduk = req.body.deskripsi;
   //! AnysChronus Data
   const produkAnys = new DataAnys(
+    null,
     namaProduk,
     gambarUrlProduk,
     hargaProduk,
@@ -76,5 +77,18 @@ exports.edithProduk = (req, res, next) => {
 };
 
 exports.postEdithProduks = (req, res, next) => {
-  // code
+  const dataIdEdit = +req.body.prodId;
+  let namaProduk = req.body["Nama Produk"];
+  let gambarUrlProduk = req.body["Gambar Produk"];
+  let hargaProduk = req.body["Harga Produk"];
+  let deskripsiProduk = req.body.deskripsi;
+
+  let hasilEditUser = new DataAnys(
+    dataIdEdit,
+    namaProduk,
+    gambarUrlProduk,
+    hargaProduk,
+    deskripsiProduk
+  );
+  res.redirect("/produks");
 };

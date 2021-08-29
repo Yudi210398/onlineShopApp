@@ -48,7 +48,11 @@
               value="wkwkw"
               required
             ></textarea>
-          </div> 
+          </div>
+
+          <% if (editing) { %>
+            <input type="hidden" value="<%= produk.id %> " name="prodId" >
+          <% } %>
 
           <button type="submit" class="btn btn-success"><% if (editing) { %>
           Edit Produk

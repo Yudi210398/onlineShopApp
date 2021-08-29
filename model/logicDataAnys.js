@@ -15,8 +15,8 @@ let getFileAnys = (cb) => {
 };
 
 module.exports = class Produkss {
-  id = +(Date.now() + ``).slice(-10);
-  constructor(namaProduk, gambarurl, harga, deskripsi) {
+  constructor(id, namaProduk, gambarurl, harga, deskripsi) {
+    this.id = id;
     this.namaProduk = namaProduk;
     this.gambarurl = gambarurl;
     this.harga = harga;
@@ -26,10 +26,21 @@ module.exports = class Produkss {
 
   save() {
     getFileAnys((produksdataP) => {
-      produksdataP.push(this);
-      fs.writeFile(p, JSON.stringify(produksdataP), (err) => {
-        console.log(err);
-      });
+      if (this.id) {
+        console.log(this.id, `this`);
+        const findId = produksdataP.findIndex((prod) => prod.id === this.id);
+        const updateData = [...produksdataP];
+        updateData[findId] = this;
+        fs.writeFile(p, JSON.stringify(updateData), (err) => {
+          console.log(err);
+        });
+      } else {
+        this.id = +(Date.now() + ``).slice(-10);
+        produksdataP.push(this);
+        fs.writeFile(p, JSON.stringify(produksdataP), (err) => {
+          console.log(err);
+        });
+      }
     });
   }
 
