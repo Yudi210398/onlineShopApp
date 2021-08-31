@@ -44,6 +44,16 @@ module.exports = class Produkss {
     });
   }
 
+  static delete(id) {
+    getFileAnys((dataload) => {
+      let deletId = dataload.filter((data) => data.id !== id);
+      let updateData = [...dataload];
+      fs.writeFile(p, JSON.stringify(updateData), (err) => {
+        console.log(err);
+      });
+    });
+  }
+
   static semuaData(cb) {
     getFileAnys(cb);
   }

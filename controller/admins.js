@@ -69,10 +69,18 @@ exports.edithProduk = (req, res, next) => {
     else
       res.render(`admin/edit-produk`, {
         doctitle: `Input Produk Page`,
-        path: `/admin/data-produk/`,
+        path: `/admin/edith-produk/`,
         editing: dataQuery,
         produk: produk,
       });
+  });
+};
+
+exports.deleteProduk = (req, res, next) => {
+  const dataDelete = req.query.delete;
+  res.render("shop/produks-detail", {
+    hapus: dataDelete,
+    produk: produk,
   });
 };
 

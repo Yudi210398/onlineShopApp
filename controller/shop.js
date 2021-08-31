@@ -56,6 +56,7 @@ exports.postCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const proId = +req.params.id;
+  console.log(proId, `proid`);
   DataAnys.findId(proId, (data) => {
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
