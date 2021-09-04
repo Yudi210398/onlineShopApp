@@ -12,13 +12,21 @@
             <img src="<%= produk.gambarurl %> " alt="" width="250px" height="300px" />
             </div>
             <br />
-            <p class="deskripsi"><%= produk. deskripsi%></p>
+            <p class="deskripsi"><%= produk.deskripsi%></p>
             <br /><br />
             <div class="tombol">
             <button class="btn btn-outline-primary">Rp. <%= produk.harga %></button>
-            <%- include('../includes/add-list-cart.ejs') %>
+            <% if (hapus) { %>
+                <form action="/admin/hapus-produks" method="POST">
+                    <input type="hidden" name="produkId" value="<%= produk.id %>" />
+                    <button class="btn btn-outline-danger" type="submit ">
+                        Hapus Produk
+                    </button>
+                </form>
+            <% } else {%>  <%- include('../includes/add-list-cart.ejs') %> <%} %>
+    
             </div>
         </main> 
-    </div> 
+    </div>  
 
 <%- include('../includes/end.ejs') %>

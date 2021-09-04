@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-
+let cart = { produks: [], totalHarga: 0 };
 const p = path.join(
   path.dirname(process.mainModule.filename),
   `data`,
@@ -10,7 +10,6 @@ module.exports = class Cart {
   static tambahProduk(id, hargabarang, harga) {
     //   ambil semua data  sebelumnya
     fs.readFile(p, (err, fileContent) => {
-      let cart = { produks: [], totalHarga: 0 };
       if (!err) {
         cart = JSON.parse(fileContent);
         console.log(cart.produks, "Cart logic");
@@ -21,7 +20,6 @@ module.exports = class Cart {
       let perbaruiProduks;
       if (dataproduk) {
         perbaruiProduks = { ...dataproduk };
-        console.log(dataprodukindex);
         perbaruiProduks.qty = perbaruiProduks.qty + 1;
         cart.produks = [...cart.produks];
         cart.produks[dataprodukindex] = perbaruiProduks;
@@ -30,6 +28,20 @@ module.exports = class Cart {
         cart.produks = [...cart.produks, perbaruiProduks];
       }
       cart.totalHarga = cart.totalHarga + +hargabarang;
+      fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
+    });
+  }
+
+  static deletecartPro(id) {
+    fs.readFile(p, (err, fileContent) => {
+      if (!err) cart = JSON.parse(fileContent);
+
+      //   analisis cart dan temukan produk yang diplih user
+      const dataprodukindex = cart.produks.findIndex((prod) => prod.id === id);
+      const dataproduk = cart.produks[dataprodukindex];
+      let dataIndex = cart.totalHarga - dataproduk.qty * dataproduk.harga;
+      cart.totalHarga = dataIndex;
+      cart.produks = cart.produks.filter((prod) => prod.id !== id);
       fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
     });
   }

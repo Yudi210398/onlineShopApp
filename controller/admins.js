@@ -1,5 +1,5 @@
 const DataAnys = require("../model/logicDataAnys.js");
-
+const DataCart = require("../model/cart-data.js");
 exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
@@ -78,9 +78,17 @@ exports.edithProduk = (req, res, next) => {
 
 exports.deleteProduk = (req, res, next) => {
   const dataDelete = req.query.delete;
-  res.render("shop/produks-detail", {
-    hapus: dataDelete,
-    produk: produk,
+  if (!dataDelete) return res.redirect("/");
+  let dataid = +req.params.id;
+  DataAnys.findId(dataid, (produk) => {
+    if (!produk) res.redirect("/");
+    else
+      res.render("shop/produks-detail", {
+        doctitle: `Hapus Produk Page`,
+        path: `/admin/hapus-produk/`,
+        produk: produk,
+        hapus: dataDelete,
+      });
   });
 };
 
@@ -99,4 +107,11 @@ exports.postEdithProduks = (req, res, next) => {
     deskripsiProduk
   );
   res.redirect("/produks");
+};
+
+exports.postHapusProduk = (req, res, next) => {
+  const dataIdEdit = +req.body.produkId;
+  DataAnys.delete(dataIdEdit);
+  DataCart.deletecartPro(dataIdEdit);
+  res.redirect("/");
 };

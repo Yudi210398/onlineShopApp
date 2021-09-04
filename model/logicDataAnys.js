@@ -8,9 +8,8 @@ const p = path.join(
 );
 let getFileAnys = (cb) => {
   fs.readFile(p, (err, fileContent) => {
-    if (err) {
-      return cb([]);
-    } else return cb(JSON.parse(fileContent));
+    if (err) return cb([]);
+    else return cb(JSON.parse(fileContent));
   });
 };
 
@@ -47,7 +46,7 @@ module.exports = class Produkss {
   static delete(id) {
     getFileAnys((dataload) => {
       let deletId = dataload.filter((data) => data.id !== id);
-      let updateData = [...dataload];
+      let updateData = [...deletId];
       fs.writeFile(p, JSON.stringify(updateData), (err) => {
         console.log(err);
       });
