@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { cp } = require("fs/promises");
 const path = require("path");
 let cart = { produks: [], totalHarga: 0 };
 const p = path.join(
@@ -40,6 +41,7 @@ module.exports = class Cart {
     readDAta((cart) => {
       const dataprodukindex = cart.produks.findIndex((prod) => prod.id === id);
       const dataproduk = cart.produks[dataprodukindex];
+      if (!cart.produks[dataprodukindex]?.qty) return;
       let perbaruiProduks;
       if (dataproduk) {
         perbaruiProduks = { ...dataproduk };
@@ -47,8 +49,13 @@ module.exports = class Cart {
         cart.produks = [...cart.produks];
         cart.produks[dataprodukindex] = perbaruiProduks;
       }
-      cart.totalHarga = cart.produks[dataprodukindex].qty * +harga;
-      console.log(cart.produks[dataprodukindex].qty * +harga);
+      let data = [];
+      for (const prod of cart.produks) {
+        let data2 = prod.qty * prod.harga;
+        data.push(data2);
+      }
+      let hargatot = data.reduce((a, b) => a + b, 0);
+      cart.totalHarga = hargatot;
       fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
     });
   }
