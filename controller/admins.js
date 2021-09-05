@@ -106,7 +106,7 @@ exports.postEdithProduks = (req, res, next) => {
     hargaProduk,
     deskripsiProduk
   );
-  DataCart.tambahProduk(dataIdEdit, hargaProduk, +hargaProduk);
+  DataCart.edithData(dataIdEdit, hargaProduk, +hargaProduk);
   res.redirect("/produks");
 };
 

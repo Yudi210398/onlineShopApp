@@ -8,7 +8,7 @@ const p = path.join(
 );
 function readDAta(cb) {
   fs.readFile(p, (err, fileContent) => {
-    if (err) return cb([]);
+    if (err) return cb(cart);
     else cart = cb(JSON.parse(fileContent));
   });
 }
@@ -24,6 +24,7 @@ module.exports = class Cart {
       if (dataproduk) {
         perbaruiProduks = { ...dataproduk };
         perbaruiProduks.qty = perbaruiProduks.qty + 1;
+        perbaruiProduks.harga = harga;
         cart.produks = [...cart.produks];
         cart.produks[dataprodukindex] = perbaruiProduks;
       } else {
@@ -35,7 +36,22 @@ module.exports = class Cart {
     });
   }
 
-  static edithData(id, hargabarang, harga) {}
+  static edithData(id, hargabarang, harga) {
+    readDAta((cart) => {
+      const dataprodukindex = cart.produks.findIndex((prod) => prod.id === id);
+      const dataproduk = cart.produks[dataprodukindex];
+      let perbaruiProduks;
+      if (dataproduk) {
+        perbaruiProduks = { ...dataproduk };
+        perbaruiProduks.harga = harga;
+        cart.produks = [...cart.produks];
+        cart.produks[dataprodukindex] = perbaruiProduks;
+      }
+      cart.totalHarga = cart.produks[dataprodukindex].qty * +harga;
+      console.log(cart.produks[dataprodukindex].qty * +harga);
+      fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
+    });
+  }
 
   static deletecartPro(id) {
     readDAta((cart) => {
