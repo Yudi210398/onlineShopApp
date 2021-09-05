@@ -6,14 +6,17 @@ const p = path.join(
   `data`,
   "cart.json"
 );
+function readDAta(cb) {
+  fs.readFile(p, (err, fileContent) => {
+    if (err) return cb([]);
+    else cart = cb(JSON.parse(fileContent));
+  });
+}
+
 module.exports = class Cart {
   static tambahProduk(id, hargabarang, harga) {
     //   ambil semua data  sebelumnya
-    fs.readFile(p, (err, fileContent) => {
-      if (!err) {
-        cart = JSON.parse(fileContent);
-        console.log(cart.produks, "Cart logic");
-      }
+    readDAta((cart) => {
       //   analisis cart dan temukan produk yang diplih user
       const dataprodukindex = cart.produks.findIndex((prod) => prod.id === id);
       const dataproduk = cart.produks[dataprodukindex];
@@ -32,10 +35,10 @@ module.exports = class Cart {
     });
   }
 
-  static deletecartPro(id) {
-    fs.readFile(p, (err, fileContent) => {
-      if (!err) cart = JSON.parse(fileContent);
+  static edithData(id, hargabarang, harga) {}
 
+  static deletecartPro(id) {
+    readDAta((cart) => {
       //   analisis cart dan temukan produk yang diplih user
       const dataprodukindex = cart.produks.findIndex((prod) => prod.id === id);
       const dataproduk = cart.produks[dataprodukindex];
