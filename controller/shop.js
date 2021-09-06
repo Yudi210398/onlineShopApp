@@ -39,10 +39,27 @@ exports.produks = (req, res, next) => {
 };
 
 exports.cart = (req, res, next) => {
-  console.log(req.query);
-  res.render(`shop/cart`, {
-    doctitle: `Cart Page`,
-    path: `/cart`,
+  Cart.getData((dataCart) => {
+    DataAnys.semuaData((datas) => {
+      const dataREsult = [];
+      for (const data of datas) {
+        const dataKeranjang = dataCart.produks.find(
+          (dataid) => dataid.id === data.id
+        );
+
+        if (dataKeranjang)
+          dataREsult.push({
+            dataProduk: data,
+            qty: dataKeranjang.qty,
+            hargaSatuan: dataKeranjang.harga,
+          });
+      }
+      res.render(`shop/cart`, {
+        doctitle: `Cart Page`,
+        path: `/cart`,
+        produks: dataREsult,
+      });
+    });
   });
 };
 
@@ -52,6 +69,15 @@ exports.postCart = (req, res, next) => {
     Cart.tambahProduk(dataId, produks.harga, +produks.harga);
   });
   res.redirect("/cart");
+};
+
+exports.deleteCart = (req, res, next) => {
+  let dataid = +req.body.prodId;
+
+  DataAnys.findId(dataid, (produk) => {
+    Cart.deletecartPro(dataid);
+    res.redirect("/cart");
+  });
 };
 
 exports.getProduct = (req, res, next) => {

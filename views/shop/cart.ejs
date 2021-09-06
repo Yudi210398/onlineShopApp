@@ -2,5 +2,25 @@
 </head>
 <%- include('../includes/nav.ejs') %>
 <!--  -->
-<h1 class="cart">Cart Page</h1>
+<div class="container">
+    <main>
+        <br>
+        <% if (produks.length > 0 ) { %>
+
+        <% produks.forEach(e => { %>
+            <ol style="list-style-type:inherit">
+                <li id="hapuscart">
+                    <p>
+                        <%= e.dataProduk.namaProduk %> (<%= e.qty %> ) || Harga Satuan (Rp. <%= e.hargaSatuan %> ) || 
+                    </p>
+                    <form action="/cart/delete-item" method="POST">
+                        <input type="hidden" value="<%= e.dataProduk.id %> " name="prodId">
+                        <button class="btndata" >Delete</button>
+                    </form>
+                </li>
+            </ol>
+            <% }) %>
+            <% } else {%> <h1>Data Tidak ada</h1> <% } %> 
+    </main>
+</div>
 <%- include('../includes/end.ejs') %>  

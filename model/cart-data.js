@@ -64,11 +64,17 @@ module.exports = class Cart {
     readDAta((cart) => {
       //   analisis cart dan temukan produk yang diplih user
       const dataprodukindex = cart.produks.findIndex((prod) => prod.id === id);
+      console.log(dataprodukindex);
+      if (dataprodukindex === -1) return;
       const dataproduk = cart.produks[dataprodukindex];
       let dataIndex = cart.totalHarga - dataproduk.qty * dataproduk.harga;
       cart.totalHarga = dataIndex;
       cart.produks = cart.produks.filter((prod) => prod.id !== id);
       fs.writeFile(p, JSON.stringify(cart), (err) => console.log(err));
     });
+  }
+
+  static getData(cb) {
+    readDAta(cb);
   }
 };

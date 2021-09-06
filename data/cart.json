@@ -1,7 +1,1 @@
-{
-  "produks": [
-    { "id": 860970067, "qty": 4, "harga": 7000 },
-    { "id": 868979013, "qty": 2, "harga": 5000 }
-  ],
-  "totalHarga": 38000
-}
+{"produks":[],"totalHarga":0}

@@ -180,3 +180,17 @@ table {
   margin-left: 5px;
   padding: 10px;
 }
+
+#hapuscart {
+  display: flex;
+}
+
+.btndata {
+  border: none;
+  background-color: white;
+  text-transform: uppercase;
+}
+
+.btndata:hover {
+  color: red;
+}

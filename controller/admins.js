@@ -21,20 +21,14 @@ exports.postData = (req, res, next) => {
     gambarUrlProduk,
     hargaProduk,
     deskripsiProduk
-  );
+  ); 
      */
-  let namaProduk = req.body["Nama Produk"];
-  let gambarUrlProduk = req.body["Gambar Produk"];
-  let hargaProduk = req.body["Harga Produk"];
-  let deskripsiProduk = req.body.deskripsi;
+  let namaProduk = req.body["Nama Produk"].trim();
+  let gambarUrlProduk = req.body["Gambar Produk"].trim();
+  let hargaProduk = req.body["Harga Produk"].trim();
+  let deskripsiProduk = req.body.deskripsi.trim();
   //! AnysChronus Data
-  const produkAnys = new DataAnys(
-    null,
-    namaProduk,
-    gambarUrlProduk,
-    hargaProduk,
-    deskripsiProduk
-  );
+  new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
 
   /* -------------------- */
 
