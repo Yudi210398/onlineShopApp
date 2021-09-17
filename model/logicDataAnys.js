@@ -1,17 +1,4 @@
-const { json } = require("body-parser");
-const fs = require("fs");
-const path = require("path");
-const p = path.join(
-  path.dirname(process.mainModule.filename),
-  `data`,
-  "dataAnys.json"
-);
-let getFileAnys = (cb) => {
-  fs.readFile(p, (err, fileContent) => {
-    if (err) return cb([]);
-    else return cb(JSON.parse(fileContent));
-  });
-};
+const db = require("../database/mysql.js");
 
 module.exports = class Produkss {
   constructor(id, namaProduk, gambarurl, harga, deskripsi) {
@@ -20,47 +7,25 @@ module.exports = class Produkss {
     this.gambarurl = gambarurl;
     this.harga = harga;
     this.deskripsi = deskripsi;
-    this.save();
+    this.save()
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
   }
 
   save() {
-    getFileAnys((produksdataP) => {
-      if (this.id) {
-        console.log(this.id, `this`);
-        const findId = produksdataP.findIndex((prod) => prod.id === this.id);
-        const updateData = [...produksdataP];
-        updateData[findId] = this;
-        fs.writeFile(p, JSON.stringify(updateData), (err) => {
-          console.log(err);
-        });
-      } else {
-        this.id = +(Date.now() + ``).slice(-10);
-        produksdataP.push(this);
-        fs.writeFile(p, JSON.stringify(produksdataP), (err) => {
-          console.log(err);
-        });
-      }
-    });
+    return db.execute(
+      "INSERT INTO product (namaProduk, gambarurl, harga, deskripsi) VALUES(?, ?, ?, ?)",
+      [this.namaProduk, this.gambarurl, this.harga, this.deskripsi]
+    );
   }
 
-  static delete(id) {
-    getFileAnys((dataload) => {
-      let deletId = dataload.filter((data) => data.id !== id);
-      let updateData = [...deletId];
-      fs.writeFile(p, JSON.stringify(updateData), (err) => {
-        console.log(err);
-      });
-    });
+  static delete(id) {}
+
+  static semuaData() {
+    return db.execute("SELECT * FROM product");
   }
 
-  static semuaData(cb) {
-    getFileAnys(cb);
-  }
-
-  static findId(id, cb) {
-    getFileAnys((dataloads) => {
-      let dataId = dataloads.find((p) => p.id === id);
-      cb(dataId);
-    });
+  static findId(id) {
+    return db.execute("SELECT * FROM product WHERE product.id = ?", [id]);
   }
 };

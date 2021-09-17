@@ -31,8 +31,7 @@ exports.postData = (req, res, next) => {
   new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
 
   /* -------------------- */
-
-  res.redirect("/");
+  setTimeout(() => res.redirect("/"), 0);
 };
 
 exports.adminProduks = (req, res, next) => {

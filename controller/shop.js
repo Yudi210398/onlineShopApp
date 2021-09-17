@@ -2,11 +2,11 @@ const DataAnys = require("../model/logicDataAnys.js");
 const Cart = require("../model/cart-data.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
-  DataAnys.semuaData((produk) => {
+  DataAnys.semuaData().then(([datas, filed]) => {
     res.render(`shop/mainPage`, {
       doctitle: `Halaman Produk Page`,
       path: `/`,
-      produks: produk,
+      produks: datas,
     });
   });
 
@@ -36,6 +36,15 @@ exports.produks = (req, res, next) => {
   //   path: `/produks`,
   //   produks: produk,
   // });
+
+  //! mysql data
+  DataAnys.semuaData().then(([datas, filed]) => {
+    res.render(`shop/produk-list`, {
+      doctitle: `Produks Page`,
+      path: `/produks`,
+      produks: datas,
+    });
+  });
 };
 
 exports.cart = (req, res, next) => {
@@ -82,12 +91,11 @@ exports.deleteCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const proId = +req.params.ids;
-  console.log(proId, `proid`);
-  DataAnys.findId(proId, (data) => {
+  DataAnys.findId(proId).then(([data]) => {
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
       path: `/produks/detail`,
-      produk: data,
+      produk: data[0],
       hapus: false,
     });
   });
