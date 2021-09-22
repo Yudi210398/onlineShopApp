@@ -1,31 +1,29 @@
-const db = require("../database/mysql.js");
+const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require("../database/sequlize.js");
 
-module.exports = class Produkss {
-  constructor(id, namaProduk, gambarurl, harga, deskripsi) {
-    this.id = id;
-    this.namaProduk = namaProduk;
-    this.gambarurl = gambarurl;
-    this.harga = harga;
-    this.deskripsi = deskripsi;
-    this.save()
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }
+const Produks = sequelize.define("produk", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  namaProduk: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  gambarurl: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  harga: {
+    type: DataTypes.DOUBLE,
+    allowNull: false,
+  },
+  deskripsi: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-  save() {
-    return db.execute(
-      "INSERT INTO product (namaProduk, gambarurl, harga, deskripsi) VALUES(?, ?, ?, ?)",
-      [this.namaProduk, this.gambarurl, this.harga, this.deskripsi]
-    );
-  }
-
-  static delete(id) {}
-
-  static semuaData() {
-    return db.execute("SELECT * FROM product");
-  }
-
-  static findId(id) {
-    return db.execute("SELECT * FROM product WHERE product.id = ?", [id]);
-  }
-};
+module.exports = Produks;

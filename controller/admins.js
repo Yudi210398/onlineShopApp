@@ -1,5 +1,5 @@
-const DataAnys = require("../model/logicDataAnys.js");
-const DataCart = require("../model/cart-data.js");
+const Produks = require("../model/logicDataAnys.js");
+
 exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
@@ -21,17 +21,28 @@ exports.postData = (req, res, next) => {
     gambarUrlProduk,
     hargaProduk,
     deskripsiProduk
-  ); 
+  );  
      */
-  let namaProduk = req.body["Nama Produk"].trim();
-  let gambarUrlProduk = req.body["Gambar Produk"].trim();
-  let hargaProduk = req.body["Harga Produk"].trim();
-  let deskripsiProduk = req.body.deskripsi.trim();
+  let namaProduks = req.body["Nama Produk"];
+  let namaProduk = req.body.namaProduk;
+  let gambarurl = req.body.gambarurl;
+  let harga = req.body.harga;
+  let deskripsi = req.body.deskripsi;
   //! AnysChronus Data
-  new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
+  // new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
+  //! Sequlize data
 
-  /* -------------------- */
-  setTimeout(() => res.redirect("/"), 0);
+  Produks.create({
+    namaProduk,
+    gambarurl,
+    harga,
+    deskripsi,
+  })
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((err) => console.log(err));
+  setTimeout(() => res.redirect("/"), 100);
 };
 
 exports.adminProduks = (req, res, next) => {

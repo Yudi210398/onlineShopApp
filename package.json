@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "nodemoon": "nodemon app.js"
+    "start": "nodemon app.js"
   },
   "author": "Yudi Runat",
   "license": "ISC",
@@ -13,6 +13,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "mysql2": "^2.3.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "sequelize": "^6.6.5"
   }
 }

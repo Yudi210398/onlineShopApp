@@ -10,7 +10,7 @@
           <input
             type="text" 
             class="form-control"
-            name="Nama Produk"
+            name="namaProduk"
             placeholder="Masukan Nama Produk"
             id="namaProduk"
             value="<% if (editing) { %><%= produk.namaProduk %> <% } %>"
@@ -20,18 +20,18 @@
           <input
             type="text"
             class="form-control"
-            name="Gambar Produk"
+            name="gambarurl"
             placeholder="Masukan Gambar url"
             id="gambarProduk" 
             required
             value="<% if (editing) { %><%= produk.gambarurl %> <% } %>" 
-          />
-
-          <input
+          /> 
+  
+          <input 
             type="number"
             min="50"
             class="form-control"
-            name="Harga Produk"
+            name="harga"
             placeholder="<% if (editing) { %><%= produk.harga %><% } else { %>Masukan Harga Produks<% } %>"
             id="hargaProduk"
             required

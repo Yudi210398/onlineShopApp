@@ -2,13 +2,15 @@ const DataAnys = require("../model/logicDataAnys.js");
 const Cart = require("../model/cart-data.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
-  DataAnys.semuaData().then(([datas, filed]) => {
-    res.render(`shop/mainPage`, {
-      doctitle: `Halaman Produk Page`,
-      path: `/`,
-      produks: datas,
-    });
-  });
+  DataAnys.findAll()
+    .then((produk) => {
+      res.render(`shop/mainPage`, {
+        doctitle: `Halaman Produk Page`,
+        path: `/`,
+        produks: produk,
+      });
+    })
+    .catch((err) => console.log(err));
 
   // ! synchronus data
   // let produk = logicInput.mintaData();
@@ -21,13 +23,23 @@ exports.mainData = (req, res, next) => {
 
 exports.produks = (req, res, next) => {
   // ! anyshronus data
-  DataAnys.semuaData((produk) => {
-    res.render(`shop/produk-list`, {
-      doctitle: `Produks Page`,
-      path: `/produks`,
-      produks: produk,
-    });
-  });
+  // DataAnys.semuaData((produk) => {
+  //   res.render(`shop/produk-list`, {
+  //     doctitle: `Produks Page`,
+  //     path: ``,
+  //     produks: produk,
+  //   });
+  // });
+
+  DataAnys.findAll()
+    .then((produk) => {
+      res.render(`shop/produk-list`, {
+        doctitle: `Produk Page`,
+        path: "/produks",
+        produks: produk,
+      });
+    })
+    .catch((err) => console.log(err));
 
   // ! synchronus data
   // let produk = logicInput.mintaData();
@@ -38,13 +50,13 @@ exports.produks = (req, res, next) => {
   // });
 
   //! mysql data
-  DataAnys.semuaData().then(([datas, filed]) => {
-    res.render(`shop/produk-list`, {
-      doctitle: `Produks Page`,
-      path: `/produks`,
-      produks: datas,
-    });
-  });
+  // DataAnys.semuaData().then(([datas, filed]) => {
+  //   res.render(`shop/produk-list`, {
+  //     doctitle: `Produks Page`,
+  //     path: `/produks`,
+  //     produks: datas,
+  //   });
+  // });
 };
 
 exports.cart = (req, res, next) => {
