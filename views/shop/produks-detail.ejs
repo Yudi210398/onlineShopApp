@@ -9,16 +9,16 @@
             <h1 class="display-5"><%= produk.namaProduk %></h1>
             <hr />
             <div>
-            <img src="<%= produk.gambarurl %> " alt="" width="250px" height="300px" />
+            <img src="<%= produk.gambarProduk %> " alt="" width="250px" height="300px" />
             </div>
             <br />
             <p class="deskripsi"><%= produk.deskripsi%></p>
             <br /><br />
             <div class="tombol">
-            <button class="btn btn-outline-primary">Rp. <%= produk.harga %></button>
+            <button class="btn btn-outline-primary">Rp. <%= produk.hargaProduk %></button>
             <% if (hapus) { %>
                 <form action="/admin/hapus-produks" method="POST">
-                    <input type="hidden" name="produkId" value="<%= produk.id %>" />
+                    <input type="hidden" name="id" value="<%= produk.id %>" />
                     <button class="btn btn-outline-danger" type="submit ">
                         Hapus Produk
                     </button>

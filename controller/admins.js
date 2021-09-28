@@ -1,4 +1,5 @@
 const Produks = require("../model/logicDataAnys.js");
+const { produks } = require("./shop.js");
 
 exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
@@ -19,25 +20,24 @@ exports.postData = (req, res, next) => {
   let dataProduk = new logicInput(
     namaProduk,
     gambarUrlProduk,
-    hargaProduk,
+    hargaProduk, 
     deskripsiProduk
   );  
      */
-  let namaProduks = req.body["Nama Produk"];
   let namaProduk = req.body.namaProduk;
-  let gambarurl = req.body.gambarurl;
-  let harga = req.body.harga;
+  let gambarProduk = req.body.gambarProduk;
+  let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
   //! AnysChronus Data
   // new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
   //! Sequlize data
-
-  Produks.create({
-    namaProduk,
-    gambarurl,
-    harga,
-    deskripsi,
-  })
+  req.user
+    .createAuthor({
+      namaProduk,
+      gambarProduk,
+      hargaProduk,
+      deskripsi,
+    })
     .then((result) => {
       console.log(result);
     })
@@ -47,7 +47,8 @@ exports.postData = (req, res, next) => {
 
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
-  DataAnys.semuaData((produk) => {
+  req.user.getAuthor().then((produk) => {
+    console.log(produk, "memek");
     res.render(`admin/admin`, {
       doctitle: `Admin Produk Page`,
       produks: produk,
@@ -68,23 +69,28 @@ exports.edithProduk = (req, res, next) => {
   let dataQuery = req.query.edit;
   if (!dataQuery) return res.redirect("/");
   let dataid = +req.params.id;
-  DataAnys.findId(dataid, (produk) => {
-    if (!produk) res.redirect("/");
-    else
-      res.render(`admin/edit-produk`, {
-        doctitle: `Input Produk Page`,
-        path: `/admin/edith-produk/`,
-        editing: dataQuery,
-        produk: produk,
-      });
-  });
+  req.user
+    .getAuthor({ whare: { id: dataid } })
+    .then((produks) => {
+      let produk = produks[0];
+      if (!produk) res.redirect("/");
+      else
+        res.render(`admin/edit-produk`, {
+          doctitle: `Input Produk Page`,
+          path: `/admin/edith-produk/`,
+          editing: dataQuery,
+          produk: produk,
+        });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.deleteProduk = (req, res, next) => {
   const dataDelete = req.query.delete;
   if (!dataDelete) return res.redirect("/");
-  let dataid = +req.params.id;
-  DataAnys.findId(dataid, (produk) => {
+  let id = +req.params.id;
+  console.log(id);
+  Produks.findByPk(id).then((produk) => {
     if (!produk) res.redirect("/");
     else
       res.render("shop/produks-detail", {
@@ -97,26 +103,27 @@ exports.deleteProduk = (req, res, next) => {
 };
 
 exports.postEdithProduks = (req, res, next) => {
-  const dataIdEdit = +req.body.prodId;
-  let namaProduk = req.body["Nama Produk"];
-  let gambarUrlProduk = req.body["Gambar Produk"];
-  let hargaProduk = req.body["Harga Produk"];
-  let deskripsiProduk = req.body.deskripsi;
+  const dataIdEdit = +req.body.id;
+  let namaProduk = req.body.namaProduk;
+  let gambarProduk = req.body.gambarProduk;
+  let hargaProduk = req.body.hargaProduk;
+  let deskripsi = req.body.deskripsi;
 
-  let hasilEditUser = new DataAnys(
-    dataIdEdit,
-    namaProduk,
-    gambarUrlProduk,
-    hargaProduk,
-    deskripsiProduk
-  );
-  DataCart.edithData(dataIdEdit, hargaProduk, +hargaProduk);
-  res.redirect("/produks");
+  Produks.findByPk(dataIdEdit)
+    .then((produk) => {
+      produk.namaProduk = namaProduk;
+      produk.gambarProduk = gambarProduk;
+      produk.hargaProduk = hargaProduk;
+      produk.deskripsi = deskripsi;
+      return produk.save();
+    })
+    .then(() => setTimeout(() => res.redirect("/produks"), 0))
+    .catch((err) => console.log(err));
 };
-
 exports.postHapusProduk = (req, res, next) => {
-  const dataIdEdit = +req.body.produkId;
-  DataAnys.delete(dataIdEdit);
-  DataCart.deletecartPro(dataIdEdit);
-  res.redirect("/");
+  const dataIdEdit = +req.body.id;
+  Produks.findByPk(dataIdEdit)
+    .then((data) => data.destroy())
+    .then(() => res.redirect("/"))
+    .catch((err) => console.log(err));
 };

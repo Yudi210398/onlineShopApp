@@ -12,11 +12,11 @@ const Produks = sequelize.define("produk", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  gambarurl: {
+  gambarProduk: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  harga: {
+  hargaProduk: {
     type: DataTypes.DOUBLE,
     allowNull: false,
   },

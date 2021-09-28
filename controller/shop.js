@@ -103,11 +103,11 @@ exports.deleteCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const proId = +req.params.ids;
-  DataAnys.findId(proId).then(([data]) => {
+  DataAnys.findByPk(proId).then((data) => {
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
       path: `/produks/detail`,
-      produk: data[0],
+      produk: data,
       hapus: false,
     });
   });

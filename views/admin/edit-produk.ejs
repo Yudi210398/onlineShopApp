@@ -20,25 +20,25 @@
           <input
             type="text"
             class="form-control"
-            name="gambarurl"
+            name="gambarProduk"
             placeholder="Masukan Gambar url"
             id="gambarProduk" 
             required
-            value="<% if (editing) { %><%= produk.gambarurl %> <% } %>" 
-          /> 
+            value="<% if (editing) { %><%= produk.gambarProduk %> <% } %>" 
+          />  
   
-          <input 
+          <input
             type="number"
             min="50"
             class="form-control"
-            name="harga"
-            placeholder="<% if (editing) { %><%= produk.harga %><% } else { %>Masukan Harga Produks<% } %>"
+            name="hargaProduk"
+            placeholder="<% if (editing) { %><%= produk.hargaProduk %><% } else { %>Masukan Harga Produks<% } %>"
             id="hargaProduk"
             required
-              value="<% if (editing) { %><%= produk.harga %> <% } %>"
+              value="<% if (editing) { %><%= produk.hargaProduk %> <% } %>"
           />
 
-          <div class="form-control">
+          <div class="form-control"> 
             <textarea
               placeholder="<% if (editing) { %><%= produk.deskripsi %><% } else { %>Deskripsi Produks<% } %>"
               name="deskripsi"
@@ -51,7 +51,7 @@
           </div>
 
           <% if (editing) { %>
-            <input type="hidden" value="<%= produk.id %> " name="prodId" >
+            <input type="hidden" value="<%= produk.id %> " name="id" >
           <% } %>
 
           <button type="submit" class="btn btn-success"><% if (editing) { %>
