@@ -32,7 +32,7 @@ exports.postData = (req, res, next) => {
   // new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
   //! Sequlize data
   req.user
-    .createAuthor({
+    .createProduk({
       namaProduk,
       gambarProduk,
       hargaProduk,
@@ -47,14 +47,16 @@ exports.postData = (req, res, next) => {
 
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
-  req.user.getAuthor().then((produk) => {
-    console.log(produk, "memek");
-    res.render(`admin/admin`, {
-      doctitle: `Admin Produk Page`,
-      produks: produk,
-      path: `/admin/admin-produk`,
-    });
-  });
+  req.user
+    .getProduk()
+    .then((produk) => {
+      res.render(`admin/admin`, {
+        doctitle: `Admin Produk Page`,
+        produks: produk,
+        path: `/admin/admin-produk`,
+      });
+    })
+    .catch((err) => console.log(err));
 
   // ! synchronus data
   // let produk = logicInput.mintaData();
@@ -70,7 +72,7 @@ exports.edithProduk = (req, res, next) => {
   if (!dataQuery) return res.redirect("/");
   let dataid = +req.params.id;
   req.user
-    .getAuthor({ whare: { id: dataid } })
+    .getProduk({ whare: { id: dataid } })
     .then((produks) => {
       let produk = produks[0];
       if (!produk) res.redirect("/");

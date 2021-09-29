@@ -11,10 +11,10 @@
             <ol style="list-style-type:inherit">
                 <li id="hapuscart">
                     <p>
-                        <%= e.dataProduk.namaProduk %> (<%= e.qty %> ) || Harga Satuan (Rp. <%= e.hargaSatuan %> ) || 
+                        <%= e.namaProduk %> <%= e.cartitem.quantity %>
                     </p>
                     <form action="/cart/delete-item" method="POST">
-                        <input type="hidden" value="<%= e.dataProduk.id %> " name="prodId">
+                        <input type="hidden" value="<%= e.id %> " name="prodId">
                         <button class="btndata" >Delete</button>
                     </form>
                 </li>

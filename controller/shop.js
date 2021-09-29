@@ -1,8 +1,8 @@
-const DataAnys = require("../model/logicDataAnys.js");
-const Cart = require("../model/cart-data.js");
+const Produks = require("../model/logicDataAnys.js");
+const Cart = require("../model/cart-data-sequlize.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
-  DataAnys.findAll()
+  Produks.findAll()
     .then((produk) => {
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
@@ -31,7 +31,7 @@ exports.produks = (req, res, next) => {
   //   });
   // });
 
-  DataAnys.findAll()
+  Produks.findAll()
     .then((produk) => {
       res.render(`shop/produk-list`, {
         doctitle: `Produk Page`,
@@ -60,42 +60,76 @@ exports.produks = (req, res, next) => {
 };
 
 exports.cart = (req, res, next) => {
-  Cart.getData((dataCart) => {
-    DataAnys.semuaData((datas) => {
-      const dataREsult = [];
-      for (const data of datas) {
-        const dataKeranjang = dataCart.produks.find(
-          (dataid) => dataid.id === data.id
-        );
-
-        if (dataKeranjang)
-          dataREsult.push({
-            dataProduk: data,
-            qty: dataKeranjang.qty,
-            hargaSatuan: dataKeranjang.harga,
+  req.user
+    .getUser()
+    .then((data) => {
+      return data
+        .getData()
+        .then((produk) => {
+          res.render(`shop/cart`, {
+            doctitle: `Cart Page`,
+            path: `/cart`,
+            produks: produk,
           });
-      }
-      res.render(`shop/cart`, {
-        doctitle: `Cart Page`,
-        path: `/cart`,
-        produks: dataREsult,
-      });
-    });
-  });
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+
+  // Cart.getData((dataCart) => {
+  //   DataAnys.semuaData((datas) => {
+  //     const dataREsult = [];
+  //     for (const data of datas) {
+  //       const dataKeranjang = dataCart.produks.find(
+  //         (dataid) => dataid.id === data.id
+  //       );
+  //       if (dataKeranjang)
+  //         dataREsult.push({
+  //           dataProduk: data,
+  //           qty: dataKeranjang.qty,
+  //           hargaSatuan: dataKeranjang.harga,
+  //         });
+  //     }
+  //     res.render(`shop/cart`, {
+  //       doctitle: `Cart Page`,
+  //       path: `/cart`,
+  //       produks: dataREsult,
+  //     });
+  //   });
+  // });
 };
 
 exports.postCart = (req, res, next) => {
   let dataId = +req.body.produkId;
-  DataAnys.findId(dataId, (produks) => {
-    Cart.tambahProduk(dataId, produks.harga, +produks.harga);
-  });
-  res.redirect("/cart");
+  let hasilSeleksi;
+  req.user
+    .getUser()
+    .then((cart) => {
+      hasilSeleksi = cart;
+      return cart.getData({ where: { id: dataId } });
+    })
+    .then((datas) => {
+      let dataCart;
+      if (datas.length > 0) dataCart = datas[0];
+      let quantitybaru = 1;
+      if (dataCart) {
+        //
+      }
+      return req.user.getProduk({ where: { id: dataId } }).then((hasil) => {
+        return hasilSeleksi.addData(hasil, {
+          through: { quantity: quantitybaru },
+        });
+      });
+    })
+    .catch((err) => console.log(err))
+    .then(() => res.redirect("/cart"))
+    .catch((err) => console.log(err));
 };
 
 exports.deleteCart = (req, res, next) => {
   let dataid = +req.body.prodId;
 
-  DataAnys.findId(dataid, (produk) => {
+  Produks.findId(dataid, (produk) => {
     Cart.deletecartPro(dataid);
     res.redirect("/cart");
   });
@@ -103,7 +137,7 @@ exports.deleteCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const proId = +req.params.ids;
-  DataAnys.findByPk(proId).then((data) => {
+  Produks.findByPk(proId).then((data) => {
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
       path: `/produks/detail`,

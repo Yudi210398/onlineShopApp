@@ -38,16 +38,17 @@ app.use(error.error);
 Produks.belongsTo(User, {
   constraints: true,
   onDelete: "CASCADE",
-  as: "Author",
 });
-User.hasMany(Produks, { as: "Author" });
-User.hasOne(Cart, { as: "Authors" });
-Cart.belongsTo(User, { as: "Authors" });
-Cart.belongsToMany(Produks, { through: CartItem, as: "data" });
-Produks.belongsToMany(Cart, { through: CartItem, as: "data" });
+User.hasMany(Produks, { as: "Produk" });
+//
+User.hasOne(Cart, { as: "User" });
+Cart.belongsTo(User, { as: "User" });
+//
+Cart.belongsToMany(Produks, { through: CartItem, as: "Data" });
+Produks.belongsToMany(Cart, { through: CartItem, as: "Data" });
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then((result) => {
     let datas = User.findByPk(1);
     return datas;
@@ -61,8 +62,7 @@ sequelize
     return data;
   })
   .then((user) => {
-    console.log(user);
-    Cart.create();
+    return user.createUser();
   })
   .then((hasil) => app.listen(port))
   .catch((err) => console.log(err));
