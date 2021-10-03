@@ -194,3 +194,15 @@ table {
 .btndata:hover {
   color: red;
 }
+
+p {
+  text-transform: capitalize;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.card-title {
+  margin-top: 10px;
+}
+
+button.order {
+}

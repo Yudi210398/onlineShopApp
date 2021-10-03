@@ -7,11 +7,12 @@ const admin = require("./routers/admin/admin.js");
 const error = require("./controller/error.js");
 // const db = require("./database/mysql.js");
 const sequelize = require("./database/sequlize.js");
-const Product = require("./model/logicDataAnys.js");
 const User = require("./model/userSequlize.js");
 const Produks = require("./model/logicDataAnys.js");
 const Cart = require("./model/cart-data-sequlize.js");
 const CartItem = require("./model/cart-item-sequlize.js");
+const Order = require("./model/order-data-sequlize.js");
+const OrderItem = require("./model/oder-item-sequlize.js");
 const port = 3000;
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -46,9 +47,14 @@ Cart.belongsTo(User, { as: "User" });
 //
 Cart.belongsToMany(Produks, { through: CartItem, as: "Data" });
 Produks.belongsToMany(Cart, { through: CartItem, as: "Data" });
+//
+Order.belongsTo(User);
+User.hasMany(Order, { as: "Order" });
+Order.belongsToMany(Produks, { through: OrderItem, as: "Order" });
 
+//
 sequelize
-  .sync({ force: true })
+  .sync()
   .then((result) => {
     let datas = User.findByPk(1);
     return datas;

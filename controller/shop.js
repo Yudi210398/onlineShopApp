@@ -102,6 +102,7 @@ exports.cart = (req, res, next) => {
 exports.postCart = (req, res, next) => {
   let dataId = +req.body.produkId;
   let hasilSeleksi;
+  let quantitybaru = 1;
   req.user
     .getUser()
     .then((cart) => {
@@ -111,17 +112,19 @@ exports.postCart = (req, res, next) => {
     .then((datas) => {
       let dataCart;
       if (datas.length > 0) dataCart = datas[0];
-      let quantitybaru = 1;
+
       if (dataCart) {
-        //
+        let quantityLama = dataCart.cartitem.quantity;
+        quantitybaru = quantityLama + 1;
+        return dataCart;
       }
-      return req.user.getProduk({ where: { id: dataId } }).then((hasil) => {
-        return hasilSeleksi.addData(hasil, {
-          through: { quantity: quantitybaru },
-        });
+      return req.user.getProduk({ where: { id: dataId } });
+    })
+    .then((dataCart) => {
+      return hasilSeleksi.addData(dataCart, {
+        through: { quantity: quantitybaru },
       });
     })
-    .catch((err) => console.log(err))
     .then(() => res.redirect("/cart"))
     .catch((err) => console.log(err));
 };
@@ -129,10 +132,28 @@ exports.postCart = (req, res, next) => {
 exports.deleteCart = (req, res, next) => {
   let dataid = +req.body.prodId;
 
-  Produks.findId(dataid, (produk) => {
+  req.user
+    .getUser()
+    .then((data) => {
+      console.log(`hapus data kontol`, data);
+
+      return data.getData({ where: { id: dataid } });
+    })
+    .then((produk) => {
+      console.log(produk);
+      let produks = produk[0];
+      return produks.cartitem.destroy();
+    })
+    .then((hasil) => res.redirect("/cart"))
+    .catch((err) => console.log(err));
+
+  // ! database JSon
+  /* 
+    Produks.findId(dataid, (produk) => {
     Cart.deletecartPro(dataid);
     res.redirect("/cart");
   });
+  */
 };
 
 exports.getProduct = (req, res, next) => {
@@ -145,6 +166,30 @@ exports.getProduct = (req, res, next) => {
       hapus: false,
     });
   });
+};
+
+exports.postOrder = (req, res, next) => {
+  req.user
+    .getUser()
+    .then((data) => {
+      return data.getData();
+    })
+    .then((result) => {
+      return req.user
+        .createOrder()
+        .then((order) => {
+          console.log(result, `kontol memek`);
+          return order.addOrder(
+            result.map((prod) => {
+              prod.orderitem = { quantity: prod.cartitem.quantity };
+              return prod;
+            })
+          );
+        })
+        .catch((err) => console.log(err));
+    })
+    .then((result) => res.redirect("/orders"))
+    .catch((err) => console.log(err));
 };
 
 exports.orders = (req, res, next) => {

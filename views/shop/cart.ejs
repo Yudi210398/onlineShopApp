@@ -5,21 +5,44 @@
 <div class="container">
     <main>
         <br>
+        <br>
         <% if (produks.length > 0 ) { %>
 
         <% produks.forEach(e => { %>
-            <ol style="list-style-type:inherit">
-                <li id="hapuscart">
-                    <p>
-                        <%= e.namaProduk %> <%= e.cartitem.quantity %>
-                    </p>
-                    <form action="/cart/delete-item" method="POST">
-                        <input type="hidden" value="<%= e.id %> " name="prodId">
-                        <button class="btndata" >Delete</button>
-                    </form>
-                </li>
-            </ol>
+                    <div class="row justify-content-md-start align-items-center">
+                    <div class="col">
+                    <div class="row align-items-center">
+                            <div class="col col-lg-6 d-flex justify-content-end">
+                                <img src="<%= e.gambarProduk %>" alt="gambar" height="100px" width="155px">
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-start">
+                                <p class="lead"><%= e.namaProduk %></p>
+                            </div>
+                    </div>
+                    </div>
+                    <div class="col">
+                    
+                        <div class="row align-items-center">
+                            <div class="col col-lg-4 d-flex justify-content-start">
+                                <p class="lead">Rp.<%= e.hargaProduk%></p>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-center">
+                                <p class="lead">(<%= e.cartitem.quantity %>) Quantity</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <form action="/cart/delete-item" method="POST">
+                            <input type="hidden" value="<%= e.id %> " name="prodId">
+                            <button class="btn btn-danger" >Hapus</button>
+                        </form>
+                    </div>
+                    </div>
+                    <br> <br>
             <% }) %>
+            <form action="/order-data" method="POST">
+            <button class="btn btn-outline-dark position-absolute top-90 start-50 translate-middle" type="submit">BELI BARANG ! </button>
+            </form>
             <% } else {%> <h1>Data Tidak ada</h1> <% } %> 
     </main>
 </div>
