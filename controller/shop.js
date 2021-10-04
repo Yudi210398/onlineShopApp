@@ -169,18 +169,20 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
+  let datasemua;
   req.user
     .getUser()
     .then((data) => {
+      datasemua = data;
       return data.getData();
     })
     .then((result) => {
       return req.user
         .createOrder()
         .then((order) => {
-          console.log(result, `kontol memek`);
           return order.addOrder(
             result.map((prod) => {
+              console.log(prod.dataValues.hargaProduk);
               prod.orderitem = { quantity: prod.cartitem.quantity };
               return prod;
             })
@@ -188,13 +190,20 @@ exports.postOrder = (req, res, next) => {
         })
         .catch((err) => console.log(err));
     })
-    .then((result) => res.redirect("/orders"))
+    .then((data) => datasemua.setData(null))
+    .then(() => res.redirect("/orders"))
     .catch((err) => console.log(err));
 };
 
 exports.orders = (req, res, next) => {
-  res.render(`shop/orders`, {
-    doctitle: `Oreders Page`,
-    path: `/orders`,
-  });
+  req.user
+    .getOrder()
+    .then((data) => {
+      res.render(`shop/orders`, {
+        doctitle: `Oreders Page`,
+        path: `/orders`,
+        orders: data,
+      });
+    })
+    .catch((err) => console.log(err));
 };

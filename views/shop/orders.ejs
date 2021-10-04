@@ -2,5 +2,23 @@
 </head>
 <%- include('../includes/nav.ejs') %>
 <!--  -->
-<h1 class="cart">Orders Page</h1>
+<br>
+<div class="container">
+    <main>
+        <% if (orders.length <= 0) { %>
+            <h1>Nothing there!</h1>
+        <% } else { %>
+            <ul>
+                <% orders.forEach(order => { %>
+                    <li>
+                        <h1># <%= order.cartitem %></h1>
+                        <ul>
+                    
+                        </ul> 
+                    </li>
+                <% }); %>
+            </ul>
+        <% } %>
+    </main>
+</div>
 <%- include('../includes/end.ejs') %>  
