@@ -11,11 +11,14 @@
             <ul>
                 <% orders.forEach(order => { %>
                     <li>
-                        <h1># <%= order.cartitem %></h1>
+                        <h1># <%= order.id %></h1>
                         <ul>
-                    
-                        </ul> 
+                           <% order.produks.forEach(element => { %>
+                            <li> <%= element.hargaProduk %> </li>
+                           <% }) %>
+                        </ul>
                     </li>
+                    <br>
                 <% }); %>
             </ul>
         <% } %>

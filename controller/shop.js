@@ -1,5 +1,6 @@
 const Produks = require("../model/logicDataAnys.js");
 const Cart = require("../model/cart-data-sequlize.js");
+const User = require("../model/userSequlize.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
   Produks.findAll()
@@ -197,8 +198,9 @@ exports.postOrder = (req, res, next) => {
 
 exports.orders = (req, res, next) => {
   req.user
-    .getOrder()
+    .getOrder({ include: ["produks"] })
     .then((data) => {
+      console.log(data, "titit memek");
       res.render(`shop/orders`, {
         doctitle: `Oreders Page`,
         path: `/orders`,

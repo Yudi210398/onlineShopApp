@@ -50,11 +50,11 @@ Produks.belongsToMany(Cart, { through: CartItem, as: "Data" });
 //
 Order.belongsTo(User);
 User.hasMany(Order, { as: "Order" });
-Order.belongsToMany(Produks, { through: OrderItem, as: "Order" });
+Order.belongsToMany(Produks, { through: OrderItem });
 
 //
 sequelize
-  .sync({ force: true })
+  .sync()
   .then((result) => {
     let datas = User.findByPk(1);
     return datas;
