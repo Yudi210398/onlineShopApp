@@ -198,7 +198,7 @@ exports.postOrder = (req, res, next) => {
 
 exports.orders = (req, res, next) => {
   req.user
-    .getOrder({ include: ["produks"] })
+    .getOrder()
     .then((data) => {
       console.log(data, "titit memek");
       res.render(`shop/orders`, {

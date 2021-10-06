@@ -50,7 +50,7 @@ Produks.belongsToMany(Cart, { through: CartItem, as: "Data" });
 //
 Order.belongsTo(User);
 User.hasMany(Order, { as: "Order" });
-Order.belongsToMany(Produks, { through: OrderItem });
+Order.belongsToMany(Produks, { through: OrderItem, as: "Order" });
 
 //
 sequelize
