@@ -31,24 +31,14 @@ exports.postData = (req, res, next) => {
   //! AnysChronus Data
   // new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
   //! Sequlize data
-  req.user
-    .createProduk({
-      namaProduk,
-      gambarProduk,
-      hargaProduk,
-      deskripsi,
-    })
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((err) => console.log(err));
+  new Produks(namaProduk, hargaProduk, deskripsi, gambarProduk);
+
   setTimeout(() => res.redirect("/"), 100);
 };
 
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
-  req.user
-    .getProduk()
+  Produks.semuadata()
     .then((produk) => {
       res.render(`admin/admin`, {
         doctitle: `Admin Produk Page`,
@@ -71,11 +61,9 @@ exports.edithProduk = (req, res, next) => {
   let dataQuery = req.query.edit;
   if (!dataQuery) return res.redirect("/");
   let dataid = +req.params.id;
-  req.user
-    .getProduk({ whare: { id: dataid } })
+  Produks.temukanId(dataid)
     .then((produks) => {
-      let produk = produks[0];
-      if (!produk) res.redirect("/");
+      if (!produks) res.redirect("/");
       else
         res.render(`admin/edit-produk`, {
           doctitle: `Input Produk Page`,
@@ -87,22 +75,22 @@ exports.edithProduk = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.deleteProduk = (req, res, next) => {
-  const dataDelete = req.query.delete;
-  if (!dataDelete) return res.redirect("/");
-  let id = +req.params.id;
-  console.log(id);
-  Produks.findByPk(id).then((produk) => {
-    if (!produk) res.redirect("/");
-    else
-      res.render("shop/produks-detail", {
-        doctitle: `Hapus Produk Page`,
-        path: `/admin/hapus-produk/`,
-        produk: produk,
-        hapus: dataDelete,
-      });
-  });
-};
+// exports.deleteProduk = (req, res, next) => {
+//   const dataDelete = req.query.delete;
+//   if (!dataDelete) return res.redirect("/");
+//   let id = +req.params.id;
+//   console.log(id);
+//   Produks.findByPk(id).then((produk) => {
+//     if (!produk) res.redirect("/");
+//     else
+//       res.render("shop/produks-detail", {
+//         doctitle: `Hapus Produk Page`,
+//         path: `/admin/hapus-produk/`,
+//         produk: produk,
+//         hapus: dataDelete,
+//       });
+//   });
+// };
 
 exports.postEdithProduks = (req, res, next) => {
   const dataIdEdit = +req.body.id;

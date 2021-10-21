@@ -6,14 +6,13 @@
 <div class="container">
     <main>
         <% if (orders.length <= 0) { %>
-            <h1>Nothing there!</h1>
+            <h1>Nothing there!</h1> 
         <% } else { %>
             <ul>
                 <% orders.forEach(order => { %>
                     <li>
-                        <h1># <%= order.cartitem %></h1>
+                        <h1># <%= order._id %></h1>
                         <ul>
-                    
                         </ul> 
                     </li>
                 <% }); %>

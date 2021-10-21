@@ -2,7 +2,7 @@ const Produks = require("../model/logicDataAnys.js");
 const Cart = require("../model/cart-data-sequlize.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
-  Produks.findAll()
+  Produks.semuadata()
     .then((produk) => {
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
@@ -31,7 +31,7 @@ exports.produks = (req, res, next) => {
   //   });
   // });
 
-  Produks.findAll()
+  Produks.semuadata()
     .then((produk) => {
       res.render(`shop/produk-list`, {
         doctitle: `Produk Page`,
@@ -135,8 +135,6 @@ exports.deleteCart = (req, res, next) => {
   req.user
     .getUser()
     .then((data) => {
-      console.log(`hapus data kontol`, data);
-
       return data.getData({ where: { id: dataid } });
     })
     .then((produk) => {
@@ -157,12 +155,14 @@ exports.deleteCart = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  const proId = +req.params.ids;
-  Produks.findByPk(proId).then((data) => {
+  const proId = req.params.ids;
+  console.log(proId);
+  Produks.temukanId(proId).then((data) => {
+    console.log(data);
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
       path: `/produks/detail`,
-      produk: data,
+      produk: data[0],
       hapus: false,
     });
   });

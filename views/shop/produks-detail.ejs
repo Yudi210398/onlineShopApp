@@ -15,10 +15,10 @@
             <p class="deskripsi"><%= produk.deskripsi%></p>
             <br /><br />
             <div class="tombol">
-            <button class="btn btn-outline-primary">Rp. <%= produk.hargaProduk %></button>
+            <button class="btn btn-outline-primary">Rp. <%= produk.hargaProduk %></button> 
             <% if (hapus) { %>
                 <form action="/admin/hapus-produks" method="POST">
-                    <input type="hidden" name="id" value="<%= produk.id %>" />
+                    <input type="hidden" name="id" value="<%= produk._id %>" />
                     <button class="btn btn-outline-danger" type="submit ">
                         Hapus Produk
                     </button>
@@ -30,3 +30,4 @@
     </div>  
 
 <%- include('../includes/end.ejs') %>
+ 
