@@ -2,7 +2,7 @@ const Produks = require("../model/logicDataAnys.js");
 const Cart = require("../model/cart-data-sequlize.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
-  Produks.semuadata()
+  Produks.fetchAll()
     .then((produk) => {
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
@@ -31,7 +31,7 @@ exports.produks = (req, res, next) => {
   //   });
   // });
 
-  Produks.semuadata()
+  Produks.fetchAll()
     .then((produk) => {
       res.render(`shop/produk-list`, {
         doctitle: `Produk Page`,
@@ -156,13 +156,15 @@ exports.deleteCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const proId = req.params.ids;
+  console.log(req.query, "memek");
+
   console.log(proId);
-  Produks.temukanId(proId).then((data) => {
+  Produks.findById(proId).then((data) => {
     console.log(data);
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
       path: `/produks/detail`,
-      produk: data[0],
+      produk: data,
       hapus: false,
     });
   });

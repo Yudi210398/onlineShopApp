@@ -1,6 +1,6 @@
+const mongoObj = require("mongodb");
 const Produks = require("../model/logicDataAnys.js");
-const { produks } = require("./shop.js");
-
+let objid = mongoObj.ObjectId;
 exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
@@ -10,35 +10,41 @@ exports.inputData = (req, res, next) => {
 };
 
 exports.postData = (req, res, next) => {
-  //! Synchronus data
-
-  /* 
-      let namaProduk = req.body["Nama Produk"];
-  let gambarUrlProduk = req.body["Gambar Produk"];
-  let hargaProduk = req.body["Harga Produk"];
-  let deskripsiProduk = req.body.deskripsi;
-  let dataProduk = new logicInput(
-    namaProduk,
-    gambarUrlProduk,
-    hargaProduk, 
-    deskripsiProduk
-  );  
-     */
   let namaProduk = req.body.namaProduk;
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-  //! AnysChronus Data
-  // new DataAnys(null, namaProduk, gambarUrlProduk, hargaProduk, deskripsiProduk);
-  //! Sequlize data
   new Produks(namaProduk, hargaProduk, deskripsi, gambarProduk);
 
   setTimeout(() => res.redirect("/"), 100);
 };
 
+exports.edithProduk = (req, res, next) => {
+  let dataQuery = req.query.edita;
+  console.log(req.query);
+  console.log(dataQuery, `wkwkws`);
+  if (!dataQuery) return res.redirect("/");
+  let dataid = req.params.id;
+  Produks.findById(dataid)
+    .then((datas) => {
+      console.log(dataid, `meki`);
+      console.log(datas, `kontol`);
+
+      if (!datas) res.redirect("/");
+      else
+        res.render(`admin/edit-produk`, {
+          doctitle: `Input Produk Page`,
+          path: `/admin/edith-produk/`,
+          editing: dataQuery,
+          produk: datas,
+        });
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
-  Produks.semuadata()
+  Produks.fetchAll()
     .then((produk) => {
       res.render(`admin/admin`, {
         doctitle: `Admin Produk Page`,
@@ -57,22 +63,20 @@ exports.adminProduks = (req, res, next) => {
   // });
 };
 
-exports.edithProduk = (req, res, next) => {
-  let dataQuery = req.query.edit;
-  if (!dataQuery) return res.redirect("/");
-  let dataid = +req.params.id;
-  Produks.temukanId(dataid)
-    .then((produks) => {
-      if (!produks) res.redirect("/");
-      else
-        res.render(`admin/edit-produk`, {
-          doctitle: `Input Produk Page`,
-          path: `/admin/edith-produk/`,
-          editing: dataQuery,
-          produk: produk,
-        });
-    })
-    .catch((err) => console.log(err));
+exports.postEdithProduks = (req, res, next) => {
+  let datas = req.body.idProduk;
+  let namaProduk = req.body.namaProduk;
+  let gambarProduk = req.body.gambarProduk;
+  let hargaProduk = req.body.hargaProduk;
+  let deskripsi = req.body.deskripsi;
+  new Produks(
+    namaProduk,
+    hargaProduk,
+    deskripsi,
+    gambarProduk,
+    new objid(datas)
+  );
+  res.redirect("/");
 };
 
 // exports.deleteProduk = (req, res, next) => {
@@ -93,22 +97,20 @@ exports.edithProduk = (req, res, next) => {
 // };
 
 exports.postEdithProduks = (req, res, next) => {
-  const dataIdEdit = +req.body.id;
+  let datas = req.body.idProduk;
+  console.log(typeof datas, `owekokwefkokontol`);
   let namaProduk = req.body.namaProduk;
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-
-  Produks.findByPk(dataIdEdit)
-    .then((produk) => {
-      produk.namaProduk = namaProduk;
-      produk.gambarProduk = gambarProduk;
-      produk.hargaProduk = hargaProduk;
-      produk.deskripsi = deskripsi;
-      return produk.save();
-    })
-    .then(() => setTimeout(() => res.redirect("/produks"), 0))
-    .catch((err) => console.log(err));
+  new Produks(
+    namaProduk,
+    hargaProduk,
+    deskripsi,
+    gambarProduk,
+    new objid(datas)
+  );
+  res.redirect("/");
 };
 exports.postHapusProduk = (req, res, next) => {
   const dataIdEdit = +req.body.id;

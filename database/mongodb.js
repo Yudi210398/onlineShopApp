@@ -3,7 +3,8 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 const mongoKonek = (cb) => {
   MongoClient.connect(
-    "mongodb+srv://yudirunat:kawasanzombi1998@cluster0.oaqmd.mongodb.net/shopOnline?retryWrites=true&w=majority"
+    "mongodb+srv://yudirunat:kawasanzombi1998@cluster0.oaqmd.mongodb.net/shopOnline?retryWrites=true&w=majority",
+    { useUnifiedTopology: true }
   )
     .then((result) => {
       console.log("conek");
