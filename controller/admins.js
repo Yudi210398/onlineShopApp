@@ -1,6 +1,4 @@
-const mongoObj = require("mongodb");
 const Produks = require("../model/logicDataAnys.js");
-let objid = mongoObj.ObjectId;
 exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
@@ -27,9 +25,6 @@ exports.edithProduk = (req, res, next) => {
   let dataid = req.params.id;
   Produks.findById(dataid)
     .then((datas) => {
-      console.log(dataid, `meki`);
-      console.log(datas, `kontol`);
-
       if (!datas) res.redirect("/");
       else
         res.render(`admin/edit-produk`, {
@@ -69,14 +64,8 @@ exports.postEdithProduks = (req, res, next) => {
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-  new Produks(
-    namaProduk,
-    hargaProduk,
-    deskripsi,
-    gambarProduk,
-    new objid(datas)
-  );
-  res.redirect("/");
+  new Produks(namaProduk, hargaProduk, deskripsi, gambarProduk, datas);
+  setTimeout(() => res.redirect("/"), 100);
 };
 
 // exports.deleteProduk = (req, res, next) => {
@@ -96,22 +85,6 @@ exports.postEdithProduks = (req, res, next) => {
 //   });
 // };
 
-exports.postEdithProduks = (req, res, next) => {
-  let datas = req.body.idProduk;
-  console.log(typeof datas, `owekokwefkokontol`);
-  let namaProduk = req.body.namaProduk;
-  let gambarProduk = req.body.gambarProduk;
-  let hargaProduk = req.body.hargaProduk;
-  let deskripsi = req.body.deskripsi;
-  new Produks(
-    namaProduk,
-    hargaProduk,
-    deskripsi,
-    gambarProduk,
-    new objid(datas)
-  );
-  res.redirect("/");
-};
 exports.postHapusProduk = (req, res, next) => {
   const dataIdEdit = +req.body.id;
   Produks.findByPk(dataIdEdit)
