@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <% produks.forEach(el => { %>
         <div class="col-sm-4"> 
-        <div class="card" style="width: 20rem">
+        <div class="card" style="width: 22rem">
             <img
             height="250px"
             src="<%= el.gambarProduk %> "
@@ -25,7 +25,7 @@
             <p class="card-text"><%= el.deskripsi %></p>
             <br />
             <div class="tombol">
-                <p class="btn btn-outline-danger">Rp. <%= el.hargaProduk %></p>
+                <p class="btn btn-outline-danger">Rp. <%= el.hargaIndo %></p>
 
                 <%- include('../includes/add-list-cart.ejs',{produk :el }) %>
             </div>

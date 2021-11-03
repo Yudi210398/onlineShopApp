@@ -12,15 +12,20 @@ exports.postData = (req, res, next) => {
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-  new Produks(namaProduk, hargaProduk, deskripsi, gambarProduk);
+  new Produks(
+    namaProduk,
+    hargaProduk,
+    deskripsi,
+    gambarProduk,
+    null,
+    req.user._id
+  );
 
   setTimeout(() => res.redirect("/"), 100);
 };
 
 exports.edithProduk = (req, res, next) => {
   let dataQuery = req.query.edita;
-  console.log(req.query);
-  console.log(dataQuery, `wkwkws`);
   if (!dataQuery) return res.redirect("/");
   let dataid = req.params.id;
   Produks.findById(dataid)
@@ -64,31 +69,37 @@ exports.postEdithProduks = (req, res, next) => {
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-  new Produks(namaProduk, hargaProduk, deskripsi, gambarProduk, datas);
+  new Produks(
+    namaProduk,
+    hargaProduk,
+    deskripsi,
+    gambarProduk,
+    datas,
+    req.user._id
+  );
   setTimeout(() => res.redirect("/"), 100);
 };
 
-// exports.deleteProduk = (req, res, next) => {
-//   const dataDelete = req.query.delete;
-//   if (!dataDelete) return res.redirect("/");
-//   let id = +req.params.id;
-//   console.log(id);
-//   Produks.findByPk(id).then((produk) => {
-//     if (!produk) res.redirect("/");
-//     else
-//       res.render("shop/produks-detail", {
-//         doctitle: `Hapus Produk Page`,
-//         path: `/admin/hapus-produk/`,
-//         produk: produk,
-//         hapus: dataDelete,
-//       });
-//   });
-// };
+exports.deleteProduk = (req, res, next) => {
+  const dataDelete = req.query.delete;
+  if (!dataDelete) return res.redirect("/");
+  let id = req.params.id;
+  console.log(id);
+  Produks.findById(id).then((produk) => {
+    if (!produk) res.redirect("/");
+    else
+      res.render("shop/produks-detail", {
+        doctitle: `Hapus Produk Page`,
+        path: `/admin/hapus-produk/`,
+        produk: produk,
+        hapus: dataDelete,
+      });
+  });
+};
 
 exports.postHapusProduk = (req, res, next) => {
-  const dataIdEdit = +req.body.id;
-  Produks.findByPk(dataIdEdit)
-    .then((data) => data.destroy())
+  const dataIdEdit = req.body.id;
+  Produks.delete(dataIdEdit)
     .then(() => res.redirect("/"))
     .catch((err) => console.log(err));
 };

@@ -1,13 +1,22 @@
 const mongodb = require("mongodb");
 const getDb = require("../database/mongodb.js").getdb;
-
+const dates = new Date();
+const option = {
+  hour: "numeric",
+  minute: "numeric",
+  day: "numeric",
+  month: "long",
+};
 class Product {
-  constructor(title, price, description, imageUrl, id) {
+  constructor(title, price, description, imageUrl, id, userid) {
     this.namaProduk = title;
     this.hargaProduk = new mongodb.Double(price);
     this.deskripsi = description;
     this.gambarProduk = imageUrl;
-    this._id = new mongodb.ObjectId(id);
+    this._id = id ? new mongodb.ObjectId(id) : null;
+    this.date = new Intl.DateTimeFormat("id-ID", option).format(dates);
+    this.hargaIndo = new Intl.NumberFormat("id-ID").format(this.hargaProduk);
+    this.userId = userid;
     this.save();
   }
 
@@ -22,6 +31,19 @@ class Product {
 
     return dbOp
       .then((result) => console.log(result))
+      .catch((err) => console.log(err));
+  }
+  static delete(id) {
+    const db = getDb();
+    return db
+      .collection("produks")
+      .deleteOne({
+        _id: new mongodb.ObjectId(id),
+      })
+      .then((product) => {
+        console.log(`sukses hapus`);
+        return product;
+      })
       .catch((err) => console.log(err));
   }
 

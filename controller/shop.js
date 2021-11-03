@@ -100,33 +100,42 @@ exports.cart = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
-  let dataId = +req.body.produkId;
-  let hasilSeleksi;
-  let quantitybaru = 1;
-  req.user
-    .getUser()
-    .then((cart) => {
-      hasilSeleksi = cart;
-      return cart.getData({ where: { id: dataId } });
-    })
-    .then((datas) => {
-      let dataCart;
-      if (datas.length > 0) dataCart = datas[0];
+  let dataId = req.body.produkId;
 
-      if (dataCart) {
-        let quantityLama = dataCart.cartitem.quantity;
-        quantitybaru = quantityLama + 1;
-        return dataCart;
-      }
-      return req.user.getProduk({ where: { id: dataId } });
+  Produks.findById(dataId)
+    .then((data) => {
+      console.log(data, `meki sasa`);
+      return req.user.addProduk(data);
     })
-    .then((dataCart) => {
-      return hasilSeleksi.addData(dataCart, {
-        through: { quantity: quantitybaru },
-      });
-    })
-    .then(() => res.redirect("/cart"))
+    .then((data) => console.log(data, "kontol"))
     .catch((err) => console.log(err));
+
+  // let hasilSeleksi;
+  // let quantitybaru = 1;
+  // req.user
+  //   .getUser()
+  //   .then((cart) => {
+  //     hasilSeleksi = cart;
+  //     return cart.getData({ where: { id: dataId } });
+  //   })
+  //   .then((datas) => {
+  //     let dataCart;
+  //     if (datas.length > 0) dataCart = datas[0];
+
+  //     if (dataCart) {
+  //       let quantityLama = dataCart.cartitem.quantity;
+  //       quantitybaru = quantityLama + 1;
+  //       return dataCart;
+  //     }
+  //     return req.user.getProduk({ where: { id: dataId } });
+  //   })
+  //   .then((dataCart) => {
+  //     return hasilSeleksi.addData(dataCart, {
+  //       through: { quantity: quantitybaru },
+  //     });
+  //   })
+  //   .then(() => res.redirect("/cart"))
+  //   .catch((err) => console.log(err));
 };
 
 exports.deleteCart = (req, res, next) => {
