@@ -1,5 +1,7 @@
 const Produks = require("../model/logicDataAnys.js");
 const Cart = require("../model/cart-data-sequlize.js");
+const { createPool } = require("mysql2/promise");
+const mongodb = require("mongodb");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
   Produks.fetchAll()
@@ -60,21 +62,30 @@ exports.produks = (req, res, next) => {
 };
 
 exports.cart = (req, res, next) => {
+  console.log(req.user, `data2`);
   req.user
-    .getUser()
-    .then((data) => {
-      return data
-        .getData()
-        .then((produk) => {
-          res.render(`shop/cart`, {
-            doctitle: `Cart Page`,
-            path: `/cart`,
-            produks: produk,
-          });
-        })
-        .catch((err) => console.log(err));
+    .getKeranjang()
+    .then((produk) => {
+      console.log(produk, `meki alyce`);
+      res.render(`shop/cart`, {
+        doctitle: `Cart Page`,
+        path: `/cart`,
+        produks: produk,
+      });
     })
     .catch((err) => console.log(err));
+
+  // req.user
+  //   .getKeranjang()
+  //   .then((products) => {
+  //     console.log(products, `meki sasa enak bgt`);
+  //     res.render("shop/cart", {
+  //       path: "/cart",
+  //       pageTitle: "Your Cart",
+  //       products: products,
+  //     });
+  //   })
+  //   .catch((err) => console.log(err));
 
   // Cart.getData((dataCart) => {
   //   DataAnys.semuaData((datas) => {
@@ -101,13 +112,12 @@ exports.cart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   let dataId = req.body.produkId;
-
+  console.log(req.user, `data hana`);
   Produks.findById(dataId)
     .then((data) => {
-      console.log(data, `meki sasa`);
       return req.user.addProduk(data);
     })
-    .then((data) => console.log(data, "kontol"))
+    .then((data) => res.redirect("/cart"))
     .catch((err) => console.log(err));
 
   // let hasilSeleksi;
@@ -139,26 +149,22 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.deleteCart = (req, res, next) => {
-  let dataid = +req.body.prodId;
+  let dataid = req.body.prodId;
 
   req.user
-    .getUser()
+    .deleteCart(dataid)
     .then((data) => {
-      return data.getData({ where: { id: dataid } });
+      console.log(dataid, "memek hanasafir");
+      console.log(data, "memek sasafir");
+      res.redirect("/cart");
     })
-    .then((produk) => {
-      console.log(produk);
-      let produks = produk[0];
-      return produks.cartitem.destroy();
-    })
-    .then((hasil) => res.redirect("/cart"))
     .catch((err) => console.log(err));
 
   // ! database JSon
   /* 
     Produks.findId(dataid, (produk) => {
     Cart.deletecartPro(dataid);
-    res.redirect("/cart");
+    res.redirect("/cart");  
   });
   */
 };
