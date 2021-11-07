@@ -1,7 +1,4 @@
 const Produks = require("../model/logicDataAnys.js");
-const Cart = require("../model/cart-data-sequlize.js");
-const { createPool } = require("mysql2/promise");
-const mongodb = require("mongodb");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
   Produks.fetchAll()
@@ -62,11 +59,9 @@ exports.produks = (req, res, next) => {
 };
 
 exports.cart = (req, res, next) => {
-  console.log(req.user, `data2`);
   req.user
     .getKeranjang()
     .then((produk) => {
-      console.log(produk, `meki alyce`);
       res.render(`shop/cart`, {
         doctitle: `Cart Page`,
         path: `/cart`,
@@ -78,7 +73,6 @@ exports.cart = (req, res, next) => {
   // req.user
   //   .getKeranjang()
   //   .then((products) => {
-  //     console.log(products, `meki sasa enak bgt`);
   //     res.render("shop/cart", {
   //       path: "/cart",
   //       pageTitle: "Your Cart",
@@ -149,19 +143,18 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.deleteCart = (req, res, next) => {
-  let dataid = req.body.prodId;
-
+  let dataid = req.body.prodIds;
+  console.log(dataid, `tete sasa`);
   req.user
     .deleteCart(dataid)
     .then((data) => {
-      console.log(dataid, "memek hanasafir");
-      console.log(data, "memek sasafir");
+      console.log(dataid, `data delete`);
       res.redirect("/cart");
     })
     .catch((err) => console.log(err));
 
   // ! database JSon
-  /* 
+  /*  
     Produks.findId(dataid, (produk) => {
     Cart.deletecartPro(dataid);
     res.redirect("/cart");  
@@ -171,7 +164,6 @@ exports.deleteCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const proId = req.params.ids;
-  console.log(req.query, "memek");
 
   console.log(proId);
   Produks.findById(proId).then((data) => {

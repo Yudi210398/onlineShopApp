@@ -8,7 +8,7 @@ routerMain.get("/produks/:ids", contoller.getProduct);
 routerMain.get("/cart", contoller.cart);
 // routerMain.get("/orders", contoller.orders);
 routerMain.post("/cart", contoller.postCart);
-routerMain.post("/order-data", contoller.postOrder);
 routerMain.post("/cart/delete-item", contoller.deleteCart);
+// routerMain.post("/order-data", contoller.postOrder);
 
 module.exports = routerMain;

@@ -45,11 +45,13 @@ class Users {
 
   getKeranjang() {
     const db = getDb();
-    let produksId = this.keranjang.item.map((p) => p.produkID);
+    let produksId = this.keranjang?.item.map((p) => p.produkID);
     console.log(produksId, `meki lili`);
+
+    let data = this.keranjang?.item === undefined ? [] : produksId;
     return db
       .collection("produks")
-      .find({ _id: { $in: produksId } })
+      .find({ _id: { $in: data } })
       .toArray()
       .then((produkss) => {
         return produkss.map((p) => {
@@ -64,9 +66,10 @@ class Users {
   }
 
   deleteCart(proId) {
-    let deleteCart = this.keranjang.item.filter((data) => {
-      console.log(typeof data.produkID, `memek hana `);
-      return data.produkID.toString() !== proId.toString();
+    /* 
+        let deleteCart = this.keranjang.item.filter((item) => {
+      console.log(item.produkID.toString(), `memek hana`);
+      return item.produkID.toString() !== proId.toString();
     });
     const db = getDb();
     return db
@@ -74,6 +77,28 @@ class Users {
       .updateOne(
         { _id: new mongodb.ObjectId(this._id) },
         { $set: { keranjang: { item: deleteCart } } }
+      );
+
+    */
+
+    const updatedCartItems = this.keranjang?.item.filter((items) => {
+      console.log(
+        items.produkID.toString() === proId.toString().trim(),
+        `tete sasas`
+      );
+      console.log(
+        items.produkID.toString() === proId.toString(),
+        `memek sayu `
+      );
+      return items.produkID.toString().trim() !== proId.toString().trim();
+    });
+    console.log(updatedCartItems, `meki elsa jean`);
+    const db = getDb();
+    return db
+      .collection("users")
+      .updateOne(
+        { _id: new mongodb.ObjectId(this._id) },
+        { $set: { keranjang: { item: updatedCartItems } } }
       );
   }
 
