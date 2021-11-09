@@ -77,6 +77,7 @@ exports.postEdithProduks = (req, res, next) => {
     datas,
     req.user._id
   );
+
   setTimeout(() => res.redirect("/"), 100);
 };
 
@@ -84,7 +85,11 @@ exports.deleteProduk = (req, res, next) => {
   const dataDelete = req.query.delete;
   if (!dataDelete) return res.redirect("/");
   let id = req.params.id;
-  console.log(id);
+
+  // ! delete cart item user ketika item dihapus di admin
+  req.user.deleteCart(id).then((data) => console.log(data, `data delete`));
+
+  // ! fungsi Hapus admin
   Produks.findById(id).then((produk) => {
     if (!produk) res.redirect("/");
     else

@@ -41,7 +41,7 @@ class Product {
         _id: new mongodb.ObjectId(id),
       })
       .then((product) => {
-        console.log(`sukses hapus`);
+        console.log(`sukses hapus`, product);
         return product;
       })
       .catch((err) => console.log(err));

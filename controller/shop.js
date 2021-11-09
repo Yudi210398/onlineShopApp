@@ -180,27 +180,10 @@ exports.getProduct = (req, res, next) => {
 exports.postOrder = (req, res, next) => {
   let datasemua;
   req.user
-    .getUser()
+    .tambahOrder()
     .then((data) => {
-      datasemua = data;
-      return data.getData();
+      res.redirect("/orders");
     })
-    .then((result) => {
-      return req.user
-        .createOrder()
-        .then((order) => {
-          return order.addOrder(
-            result.map((prod) => {
-              console.log(prod.dataValues.hargaProduk);
-              prod.orderitem = { quantity: prod.cartitem.quantity };
-              return prod;
-            })
-          );
-        })
-        .catch((err) => console.log(err));
-    })
-    .then((data) => datasemua.setData(null))
-    .then(() => res.redirect("/orders"))
     .catch((err) => console.log(err));
 };
 
