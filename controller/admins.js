@@ -77,7 +77,9 @@ exports.postEdithProduks = (req, res, next) => {
     datas,
     req.user._id
   );
-
+  Produks.findById(datas).then((data) => {
+    req.user.editdataItem(data);
+  });
   setTimeout(() => res.redirect("/"), 100);
 };
 

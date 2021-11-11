@@ -30,7 +30,7 @@ class Product {
     } else dbOp = db.collection("produks").insertOne(this);
 
     return dbOp
-      .then((result) => console.log(result))
+      .then((result) => console.log(result, `tete alyce`))
       .catch((err) => console.log(err));
   }
   static delete(id) {
@@ -54,7 +54,6 @@ class Product {
       .find()
       .toArray()
       .then((produks) => {
-        console.log(produks);
         return produks;
       })
       .catch((err) => {
@@ -69,7 +68,7 @@ class Product {
       .find({ _id: new mongodb.ObjectId(prodId) })
       .next()
       .then((product) => {
-        console.log(product);
+        console.log(product, `tete asley`);
         return product;
       })
       .catch((err) => console.log(err));

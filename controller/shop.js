@@ -144,7 +144,6 @@ exports.postCart = (req, res, next) => {
 
 exports.deleteCart = (req, res, next) => {
   let dataid = req.body.prodIds;
-  console.log(dataid, `tete sasa`);
   req.user
     .deleteCart(dataid)
     .then((data) => {
@@ -165,7 +164,7 @@ exports.deleteCart = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const proId = req.params.ids;
 
-  console.log(proId);
+  console.log(proId, `tete debby`);
   Produks.findById(proId).then((data) => {
     console.log(data);
     res.render("shop/produks-detail", {

@@ -30,7 +30,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   Users.findById("6186efebe09b75795013ede1")
     .then((user) => {
-      console.log(user.keranjang, `meki erna`);
       req.user = new Users(user.nama, user.email, user.keranjang, user._id);
       next();
     })
