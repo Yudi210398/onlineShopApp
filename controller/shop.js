@@ -62,10 +62,12 @@ exports.cart = (req, res, next) => {
   req.user
     .getKeranjang()
     .then((produk) => {
+      console.log(produk, `ok deh`);
       res.render(`shop/cart`, {
         doctitle: `Cart Page`,
         path: `/cart`,
         produks: produk,
+        produksd: req.user,
       });
     })
     .catch((err) => console.log(err));

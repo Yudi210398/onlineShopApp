@@ -30,7 +30,7 @@ class Product {
     } else dbOp = db.collection("produks").insertOne(this);
 
     return dbOp
-      .then((result) => console.log(result, `tete alyce`))
+      .then((result) => console.log(result))
       .catch((err) => console.log(err));
   }
   static delete(id) {
@@ -40,10 +40,7 @@ class Product {
       .deleteOne({
         _id: new mongodb.ObjectId(id),
       })
-      .then((product) => {
-        console.log(`sukses hapus`, product);
-        return product;
-      })
+      .then((product) => product)
       .catch((err) => console.log(err));
   }
 
@@ -68,7 +65,6 @@ class Product {
       .find({ _id: new mongodb.ObjectId(prodId) })
       .next()
       .then((product) => {
-        console.log(product, `tete asley`);
         return product;
       })
       .catch((err) => console.log(err));

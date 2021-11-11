@@ -40,9 +40,20 @@
                     </div>
                     <br> <br>
             <% }) %>
-            <form action="/order-data" method="POST">
-            <button class="btn btn-outline-dark position-absolute top-90 start-50 translate-middle" type="submit">BELI BARANG ! </button>
-            </form>
+            <hr>
+            <br>
+            <br>
+            <div class="row justify-content-md-start align-items-center">
+                <div class="col col-lg-6">
+                    <form action="/order-data" method="POST">
+                        <button class="btn btn-outline-dark position-absolute top-90 start-50 translate-middle" type="submit">BELI BARANG ! </button>
+                    </form>
+                </div>
+
+                <div class="col-md-6  d-flex justify-content-center">
+                    <p class="lead">Total Harga : Rp.<%= produksd.keranjang.totalHarga %>  </p>
+                </div>
+            </div>
             <% } else {%> <h1>Data Tidak ada</h1> <% } %> 
     </main>
 </div>

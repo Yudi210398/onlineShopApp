@@ -17,7 +17,6 @@ class Users {
 
   editdataItem(data) {
     const db = getDb();
-    console.log(data, "meki meggige");
     const kerajangindex = this.keranjang?.item?.findIndex(
       (cp) => cp.produkID.toString() === data._id.toString()
     );
@@ -48,7 +47,7 @@ class Users {
     return db
       .collection("users")
       .insertOne(this)
-      .then((result) => console.log(result, `tete hana`))
+      .then((result) => console.log(result))
       .catch((err) => console.log(err));
   }
 
@@ -96,7 +95,6 @@ class Users {
       .find({ _id: { $in: data } })
       .toArray()
       .then((produkss) => {
-        console.log(produkss, `data era lama`);
         return produkss.map((p) => {
           return {
             ...p,
