@@ -7,6 +7,7 @@ const admin = require("./routers/admin/admin.js");
 const error = require("./controller/error.js");
 const mongoKonek = require("./database/mongodb.js").mongoKonek;
 const Users = require("./model/users.js");
+const mongoose = require(`mongoose`);
 // const db = require("./database/mysql.js");
 const port = 3000;
 app.set("view engine", "ejs");
@@ -40,4 +41,12 @@ app.use(mainData);
 app.use("/admin", admin);
 app.use(error.error);
 
-mongoKonek(() => app.listen(port));
+mongoose
+  .connect(
+    "mongodb+srv://yudirunat:kawasanzombi1998@cluster0.oaqmd.mongodb.net/shopOnline?retryWrites=true&w=majority"
+  )
+  .then((result) => {
+    app.listen(port);
+    console.log(result, `conek`);
+  })
+  .catch((err) => console.log(err));
