@@ -6,7 +6,7 @@ const mainData = require(`./routers/shop/mainPage.js`);
 const admin = require("./routers/admin/admin.js");
 const error = require("./controller/error.js");
 const mongoKonek = require("./database/mongodb.js").mongoKonek;
-const Users = require("./model/users.js");
+// const Users = require("./model/users.js");
 const mongoose = require(`mongoose`);
 // const db = require("./database/mysql.js");
 const port = 3000;
@@ -28,14 +28,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     .catch((err) => console.log(err));
 // });
 
-app.use((req, res, next) => {
-  Users.findById("6186efebe09b75795013ede1")
-    .then((user) => {
-      req.user = new Users(user.nama, user.email, user.keranjang, user._id);
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+// app.use((req, res, next) => {
+//   Users.findById("6186efebe09b75795013ede1")
+//     .then((user) => {
+//       req.user = new Users(user.nama, user.email, user.keranjang, user._id);
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 app.use(mainData);
 app.use("/admin", admin);

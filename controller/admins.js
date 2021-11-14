@@ -1,4 +1,5 @@
 const Produks = require("../model/logicDataAnys.js");
+
 exports.inputData = (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
@@ -12,16 +13,22 @@ exports.postData = (req, res, next) => {
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-  new Produks(
+  let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
+  let produks = new Produks({
     namaProduk,
     hargaProduk,
     deskripsi,
     gambarProduk,
-    null,
-    req.user._id
-  );
+    hargaIndo,
+  });
 
-  setTimeout(() => res.redirect("/"), 100);
+  produks
+    .save()
+    .then((result) => {
+      console.log(`selesai buat produks`);
+      setTimeout(() => res.redirect("/"), 100);
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.edithProduk = (req, res, next) => {
@@ -44,7 +51,7 @@ exports.edithProduk = (req, res, next) => {
 
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
-  Produks.fetchAll()
+  Produks.find()
     .then((produk) => {
       res.render(`admin/admin`, {
         doctitle: `Admin Produk Page`,
@@ -69,18 +76,21 @@ exports.postEdithProduks = (req, res, next) => {
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
-  new Produks(
-    namaProduk,
-    hargaProduk,
-    deskripsi,
-    gambarProduk,
-    datas,
-    req.user._id
-  );
-  Produks.findById(datas).then((data) => {
-    req.user.editdataItem(data);
-  });
-  setTimeout(() => res.redirect("/"), 100);
+  let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
+  Produks.findById(datas)
+    .then((data) => {
+      console.log(data, `meki sasa`);
+      data.namaProduk = namaProduk;
+      data.gambarProduk = gambarProduk;
+      data.hargaProduk = hargaProduk;
+      data.deskripsi = deskripsi;
+      data.hargaIndo = hargaIndo;
+      return data.save();
+
+      // req.user.editdataItem(data);
+    })
+    .then((result) => setTimeout(() => res.redirect("/"), 100))
+    .catch((err) => console.log(err));
 };
 
 exports.deleteProduk = (req, res, next) => {
@@ -89,7 +99,7 @@ exports.deleteProduk = (req, res, next) => {
   let id = req.params.id;
 
   // ! delete cart item user ketika item dihapus di admin
-  req.user.deleteCart(id).then((data) => console.log(data, `data delete`));
+  // req.user.deleteCart(id).then((data) => console.log(data, `data delete`));
 
   // ! fungsi Hapus admin
   Produks.findById(id).then((produk) => {
@@ -106,7 +116,7 @@ exports.deleteProduk = (req, res, next) => {
 
 exports.postHapusProduk = (req, res, next) => {
   const dataIdEdit = req.body.id;
-  Produks.delete(dataIdEdit)
+  Produks.findByIdAndRemove(dataIdEdit)
     .then(() => res.redirect("/"))
     .catch((err) => console.log(err));
 };

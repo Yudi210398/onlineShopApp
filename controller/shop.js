@@ -1,7 +1,7 @@
 const Produks = require("../model/logicDataAnys.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
-  Produks.fetchAll()
+  Produks.find()
     .then((produk) => {
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
@@ -30,7 +30,7 @@ exports.produks = (req, res, next) => {
   //   });
   // });
 
-  Produks.fetchAll()
+  Produks.find()
     .then((produk) => {
       res.render(`shop/produk-list`, {
         doctitle: `Produk Page`,
@@ -108,9 +108,9 @@ exports.cart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   let dataId = req.body.produkId;
-  console.log(req.user, `data hana`);
   Produks.findById(dataId)
     .then((data) => {
+      console.log(data);
       return req.user.addProduk(data);
     })
     .then((data) => res.redirect("/cart"))
