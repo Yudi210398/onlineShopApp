@@ -13,10 +13,10 @@
                     <div class="col">
                     <div class="row align-items-center">
                             <div class="col col-lg-6 d-flex justify-content-end">
-                                <img src="<%= e.gambarProduk %>" alt="gambar" height="100px" width="155px">
+                                <img src="<%= e.produkId.gambarProduk %>" alt="gambar" height="100px" width="155px">
                             </div>
                             <div class="col-md-6 d-flex justify-content-start">
-                                <p class="lead"><%= e.namaProduk %></p>
+                                <p class="lead"><%= e.produkId.namaProduk %></p>
                             </div>
                     </div>
                     </div>
@@ -24,7 +24,7 @@
                     
                         <div class="row align-items-center">
                             <div class="col col-lg-5 d-flex justify-content-start">
-                                <p class="lead">Rp.<%= e.hargaIndo%></p>
+                                <p class="lead">Rp.<%= e.produkId.hargaIndo%></p>
                             </div>
                             <div class="col-md-6  d-flex justify-content-center">
                                 <p class="lead">(<%= e.quantity %>) Quantity</p>

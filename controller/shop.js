@@ -60,13 +60,15 @@ exports.produks = (req, res, next) => {
 
 exports.cart = (req, res, next) => {
   req.user
-    .getKeranjang()
+    .populate("keranjang.item.produkId")
     .then((produk) => {
-      console.log(produk, `ok deh`);
+      console.log(produk.keranjang.item, `ok deh`);
+      const data1 = produk.keranjang.item;
+
       res.render(`shop/cart`, {
         doctitle: `Cart Page`,
         path: `/cart`,
-        produks: produk,
+        produks: data1,
         produksd: req.user,
       });
     })
@@ -110,7 +112,7 @@ exports.postCart = (req, res, next) => {
   let dataId = req.body.produkId;
   Produks.findById(dataId)
     .then((data) => {
-      console.log(data);
+      console.log(req.user);
       return req.user.addProduk(data);
     })
     .then((data) => res.redirect("/cart"))
@@ -146,10 +148,11 @@ exports.postCart = (req, res, next) => {
 
 exports.deleteCart = (req, res, next) => {
   let dataid = req.body.prodIds;
+  console.log(dataid, `meki sasa`);
   req.user
-    .deleteCart(dataid)
+    .deleteKeranjang(dataid)
     .then((data) => {
-      console.log(dataid, `data delete`);
+      console.log(data, `data delete`);
       res.redirect("/cart");
     })
     .catch((err) => console.log(err));

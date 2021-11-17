@@ -20,6 +20,7 @@ exports.postData = (req, res, next) => {
     deskripsi,
     gambarProduk,
     hargaIndo,
+    userId: req.user._id,
   });
 
   produks
@@ -52,7 +53,9 @@ exports.edithProduk = (req, res, next) => {
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
   Produks.find()
+    .populate("userId")
     .then((produk) => {
+      console.log(produk);
       res.render(`admin/admin`, {
         doctitle: `Admin Produk Page`,
         produks: produk,

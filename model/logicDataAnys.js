@@ -35,8 +35,13 @@ const Product = new Schema({
   hargaIndo: {
     type: String,
     required: true,
+    default: {},
   },
-
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "Users",
+    required: true,
+  },
   tanggal: {
     type: String,
     default: tanggal(),

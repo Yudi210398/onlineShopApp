@@ -1,3 +1,74 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const Users = new Schema({
+  nama: { type: String, required: true },
+  email: { type: String, required: true },
+  keranjang: {
+    item: [
+      {
+        produkId: {
+          type: Schema.Types.ObjectId,
+          ref: "Produks",
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+        hargaProduk: { type: Number, required: true },
+      },
+    ],
+    totalHarga: { type: String },
+  },
+});
+
+let hargatotalKeranjang = function (data) {
+  return data.map((a) => a.hargaProduk * a.quantity).reduce((a, b) => a + b, 0);
+};
+
+Users.methods.deleteKeranjang = function (proId) {
+  const updatedCartItems = this.keranjang?.item?.filter(
+    (items) => items._id.toString().trim() !== proId.toString().trim()
+  );
+  console.log(updatedCartItems);
+  let totalHargas = hargatotalKeranjang(updatedCartItems);
+  this.keranjang.item = updatedCartItems;
+  this.keranjang.totalHarga = new Intl.NumberFormat("id-ID").format(
+    totalHargas
+  );
+  return this.save();
+};
+
+Users.methods.addProduk = function (produk) {
+  // ! Logic tambah Produk keranjang
+  const kerajangindex = this.keranjang?.item?.findIndex(
+    (cp) => cp.produkId.toString() === produk._id.toString()
+  );
+  let quantityBaru = 1;
+  let updateDataProduk =
+    this.keranjang?.item === undefined ? [] : [...this.keranjang.item];
+  if (kerajangindex >= 0) {
+    quantityBaru = this.keranjang.item[kerajangindex].quantity + 1;
+    updateDataProduk[kerajangindex].quantity = quantityBaru;
+  } else
+    updateDataProduk.push({
+      produkId: produk._id,
+      quantity: 1,
+      hargaProduk: produk.hargaProduk,
+    });
+
+  let totalHarga = hargatotalKeranjang(updateDataProduk);
+
+  const updateProduk = {
+    item: updateDataProduk,
+    totalHarga: new Intl.NumberFormat("id-ID").format(totalHarga),
+  };
+  this.keranjang = updateProduk;
+  return this.save();
+};
+
+module.exports = mongoose.model("Users", Users);
+
+/* 
+
 const mongodb = require("mongodb");
 const getDb = require("../database/mongodb.js").getdb;
 const Produks = require("../model/logicDataAnys.js");
@@ -103,7 +174,7 @@ class Users {
             ).quantity,
           };
         });
-      });
+      }); 
   }
 
   deleteCart(proId) {
@@ -173,3 +244,6 @@ class Users {
 }
 
 module.exports = Users;
+
+
+*/

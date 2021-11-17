@@ -5,28 +5,23 @@ const app = express();
 const mainData = require(`./routers/shop/mainPage.js`);
 const admin = require("./routers/admin/admin.js");
 const error = require("./controller/error.js");
-const mongoKonek = require("./database/mongodb.js").mongoKonek;
-// const Users = require("./model/users.js");
 const mongoose = require(`mongoose`);
-// const db = require("./database/mysql.js");
+const Users = require("./model/users.js");
 const port = 3000;
 app.set("view engine", "ejs");
 app.set("views", "views");
-// db.execute("SELECT * FROM product")
-//   .then((data) => console.log(data[0]))z
-//   .catch((err) => console.log(err));
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use((req, res, next) => {
-//   Users.findById("618161d20072ee30fc6b6ad7")
-//     .then((users) => {
-//       req.user = new Users(users.nama, users.email, users.keranjang, users._id);
-//       console.log(`data meki`);
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  Users.findById("61952bf299f9c5f5bc753e42")
+    .then((users) => {
+      req.user = users;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 // app.use((req, res, next) => {
 //   Users.findById("6186efebe09b75795013ede1")
@@ -47,6 +42,16 @@ mongoose
   )
   .then((result) => {
     app.listen(port);
-    console.log(result, `conek`);
+    Users.findOne().then((data) => {
+      if (!data) {
+        const user = new Users({
+          nama: `Yudi Runat Masneno`,
+          email: `yudi.berland@gmail.com`,
+        });
+        user.save();
+      }
+    });
+
+    console.log(`conek`);
   })
   .catch((err) => console.log(err));
