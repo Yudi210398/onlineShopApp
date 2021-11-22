@@ -24,17 +24,46 @@ let hargatotalKeranjang = function (data) {
   return data.map((a) => a.hargaProduk * a.quantity).reduce((a, b) => a + b, 0);
 };
 
+let hapusFungsi = function (data, object) {
+  let totalHargas = hargatotalKeranjang(data);
+  object.keranjang.item = data;
+  object.keranjang.totalHarga = new Intl.NumberFormat("id-ID").format(
+    totalHargas
+  );
+  return object.save();
+};
+
+Users.methods.clearKeranjang = function () {
+  this.keranjang = { item: [], totalHarga: undefined };
+  return this.save();
+};
+
+Users.methods.editData = function (data) {
+  const kerajangindex = this.keranjang?.item?.findIndex(
+    (cp) => cp.produkId.toString() === data._id.toString()
+  );
+  if (kerajangindex === -1) return;
+  this.keranjang.item[kerajangindex].hargaProduk = data.hargaProduk;
+
+  let hasil = this.keranjang.item;
+  let hasilTotal = hargatotalKeranjang(hasil);
+  this.keranjang.totalHarga = new Intl.NumberFormat("id-ID").format(hasilTotal);
+  return this.save();
+};
+
 Users.methods.deleteKeranjang = function (proId) {
   const updatedCartItems = this.keranjang?.item?.filter(
     (items) => items._id.toString().trim() !== proId.toString().trim()
   );
-  console.log(updatedCartItems);
-  let totalHargas = hargatotalKeranjang(updatedCartItems);
-  this.keranjang.item = updatedCartItems;
-  this.keranjang.totalHarga = new Intl.NumberFormat("id-ID").format(
-    totalHargas
+
+  hapusFungsi(updatedCartItems, this);
+};
+
+Users.methods.deleteKeranjangAdmin = function (proId) {
+  const updatedCartItems = this.keranjang?.item?.filter(
+    (items) => items.produkId.toString().trim() !== proId.toString().trim()
   );
-  return this.save();
+  hapusFungsi(updatedCartItems, this);
 };
 
 Users.methods.addProduk = function (produk) {

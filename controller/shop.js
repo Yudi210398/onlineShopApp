@@ -1,4 +1,5 @@
 const Produks = require("../model/logicDataAnys.js");
+const Order = require("../model/oder-item-sequlize.js");
 exports.mainData = (req, res, next) => {
   // ! anyshronus data
   Produks.find()
@@ -7,6 +8,7 @@ exports.mainData = (req, res, next) => {
         doctitle: `Halaman Produk Page`,
         path: `/`,
         produks: produk,
+        autentikasi: req.isLogin,
       });
     })
     .catch((err) => console.log(err));
@@ -36,6 +38,7 @@ exports.produks = (req, res, next) => {
         doctitle: `Produk Page`,
         path: "/produks",
         produks: produk,
+        autentikasi: req.isLogin,
       });
     })
     .catch((err) => console.log(err));
@@ -62,7 +65,6 @@ exports.cart = (req, res, next) => {
   req.user
     .populate("keranjang.item.produkId")
     .then((produk) => {
-      console.log(produk.keranjang.item, `ok deh`);
       const data1 = produk.keranjang.item;
 
       res.render(`shop/cart`, {
@@ -70,6 +72,7 @@ exports.cart = (req, res, next) => {
         path: `/cart`,
         produks: data1,
         produksd: req.user,
+        autentikasi: req.isLogin,
       });
     })
     .catch((err) => console.log(err));
@@ -112,7 +115,6 @@ exports.postCart = (req, res, next) => {
   let dataId = req.body.produkId;
   Produks.findById(dataId)
     .then((data) => {
-      console.log(req.user);
       return req.user.addProduk(data);
     })
     .then((data) => res.redirect("/cart"))
@@ -146,16 +148,11 @@ exports.postCart = (req, res, next) => {
   //   .catch((err) => console.log(err));
 };
 
-exports.deleteCart = (req, res, next) => {
+exports.deleteCart = async (req, res, next) => {
   let dataid = req.body.prodIds;
-  console.log(dataid, `meki sasa`);
-  req.user
-    .deleteKeranjang(dataid)
-    .then((data) => {
-      console.log(data, `data delete`);
-      res.redirect("/cart");
-    })
-    .catch((err) => console.log(err));
+  await req.user.deleteKeranjang(dataid);
+
+  await res.redirect("/cart");
 
   // ! database JSon
   /*  
@@ -177,14 +174,29 @@ exports.getProduct = (req, res, next) => {
       path: `/produks/detail`,
       produk: data,
       hapus: false,
+      autentikasi: req.isLogin,
     });
   });
 };
 
 exports.postOrder = (req, res, next) => {
-  let datasemua;
   req.user
-    .tambahOrder()
+    .populate("keranjang.item.produkId")
+    .then((produk) => {
+      const produks = produk.keranjang.item.map((data) => {
+        return { quantity: data.quantity, produk: { ...data.produkId._doc } };
+      });
+      const order = new Order({
+        totalHarga: req.user.keranjang.totalHarga,
+        user: {
+          nama: req.user.nama,
+          userId: req.user._id,
+        },
+        produks: produks,
+      });
+      return order.save();
+    })
+    .then((data) => req.user.clearKeranjang())
     .then((data) => {
       res.redirect("/orders");
     })
@@ -192,13 +204,13 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.orders = (req, res, next) => {
-  req.user
-    .getOrder()
+  Order.find({ "user.userId": req.user._id })
     .then((data) => {
       res.render(`shop/orders`, {
         doctitle: `Oreders Page`,
         path: `/orders`,
         orders: data,
+        autentikasi: req.isLogin,
       });
     })
     .catch((err) => console.log(err));

@@ -5,6 +5,7 @@ exports.inputData = (req, res, next) => {
     doctitle: `Input Produk Page`,
     path: `/admin/data-produk/`,
     editing: false,
+    autentikasi: req.isLogin,
   });
 };
 
@@ -45,6 +46,7 @@ exports.edithProduk = (req, res, next) => {
           path: `/admin/edith-produk/`,
           editing: dataQuery,
           produk: datas,
+          autentikasi: req.isLogin,
         });
     })
     .catch((err) => console.log(err));
@@ -60,6 +62,7 @@ exports.adminProduks = (req, res, next) => {
         doctitle: `Admin Produk Page`,
         produks: produk,
         path: `/admin/admin-produk`,
+        autentikasi: req.isLogin,
       });
     })
     .catch((err) => console.log(err));
@@ -82,14 +85,13 @@ exports.postEdithProduks = (req, res, next) => {
   let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
   Produks.findById(datas)
     .then((data) => {
-      console.log(data, `meki sasa`);
       data.namaProduk = namaProduk;
       data.gambarProduk = gambarProduk;
       data.hargaProduk = hargaProduk;
       data.deskripsi = deskripsi;
       data.hargaIndo = hargaIndo;
+      req.user.editData(data);
       return data.save();
-
       // req.user.editdataItem(data);
     })
     .then((result) => setTimeout(() => res.redirect("/"), 100))
@@ -113,12 +115,14 @@ exports.deleteProduk = (req, res, next) => {
         path: `/admin/hapus-produk/`,
         produk: produk,
         hapus: dataDelete,
+        autentikasi: req.isLogin,
       });
   });
 };
 
 exports.postHapusProduk = (req, res, next) => {
   const dataIdEdit = req.body.id;
+  req.user.deleteKeranjangAdmin(dataIdEdit);
   Produks.findByIdAndRemove(dataIdEdit)
     .then(() => res.redirect("/"))
     .catch((err) => console.log(err));

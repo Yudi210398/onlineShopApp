@@ -1,22 +1,27 @@
 <%- include('../includes/head.ejs') %>
 </head>
 <%- include('../includes/nav.ejs') %>
-<!--  -->
 <br>
 <div class="container">
     <main>
         <% if (orders.length <= 0) { %>
-            <h1>Nothing there!</h1> 
+            <h1> <i> Tidak Ada Pembelian !</i> </h1> 
         <% } else { %>
-            <ul>
+            <div class="row justify-content-center">
                 <% orders.forEach(order => { %>
-                    <li>
-                        <h1># <%= order._id %></h1>
-                        <ul>
-                        </ul> 
-                    </li>
+                        <div class="card border-danger m-3 " style="max-width: 22rem;">
+                            <div class="card-header bg-transparent border-danger">Bayar Sebelum : <strong> <%= order.waktuBatasPembayaran %> </strong></div>
+                            <div class="card-body">
+                            <p class="card-title">Kode Pembayaran : <%= order._id %> </p>
+                            <br>
+                            <p class="card-text">Transfer Ke : 3743859658</p>
+                            <br>
+                            <p class="card-text">Total Harga : Rp. <%= order.totalHarga %> </p>
+                            </div>
+                            <div class="card-footer bg-transparent border-danger">Masneno Online Shop</div>
+                        </div>
                 <% }); %>
-            </ul>
+            </div>
         <% } %>
     </main>
 </div>

@@ -33,13 +33,20 @@
                         <a class="nav-link <%= path === "/orders" ? "active" : "" %> " aria-current="page" href="/orders">orders</a>
                     </li>   
 
+                <% if (autentikasi) { %>
                     <li class="nav-item">
                         <a class="nav-link <%= path ==='/admin/data-produk/' ? 'active' : '' %> " href="/admin/data-produk">Tambah Produk</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= path ==='/admin/admin-produk' ? 'active' : '' %> " href="/admin/admin-produk">admin produks</a>
+                    </li> 
+                <% } %>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link <%= path ==='/login' ? 'active' : '' %> " href="/login">Login</a>
                     </li>
-                </ul> 
+                </ul>
             </div>
         </div>
     </nav>   

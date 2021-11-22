@@ -9,7 +9,6 @@ let tanggal = function () {
     day: "numeric",
     month: "long",
   };
-
   return new Intl.DateTimeFormat("id-ID", option).format(dates);
 };
 
@@ -35,7 +34,6 @@ const Product = new Schema({
   hargaIndo: {
     type: String,
     required: true,
-    default: {},
   },
   userId: {
     type: Schema.Types.ObjectId,

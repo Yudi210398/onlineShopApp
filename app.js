@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const mainData = require(`./routers/shop/mainPage.js`);
 const admin = require("./routers/admin/admin.js");
+const Auth = require("./routers/auth/authRoute.js");
 const error = require("./controller/error.js");
 const mongoose = require(`mongoose`);
 const Users = require("./model/users.js");
@@ -15,7 +16,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-  Users.findById("61952bf299f9c5f5bc753e42")
+  Users.findById("61969ab346161fc58f5b0d80")
     .then((users) => {
       req.user = users;
       next();
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 
 app.use(mainData);
 app.use("/admin", admin);
+app.use(Auth);
 app.use(error.error);
 
 mongoose
