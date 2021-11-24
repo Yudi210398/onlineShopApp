@@ -1,14 +1,13 @@
 exports.login = (req, res, next) => {
-  let isLogin = req.get("Cookie").split(";")[2].trim().split("=")[1];
-
+  console.log(req.session.loginAja);
   res.render(`auth/auth`, {
     doctitle: `Login`,
     path: "/login",
-    autentikasi: isLogin,
+    autentikasi: req.session,
   });
 };
 
 exports.postData = (req, res, next) => {
-  res.setHeader("Set-Cookie", "masukAdmin=true");
+  req.session.loginAja = true;
   res.redirect("/");
 };

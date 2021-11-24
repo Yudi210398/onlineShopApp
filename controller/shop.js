@@ -1,6 +1,7 @@
 const Produks = require("../model/logicDataAnys.js");
 const Order = require("../model/oder-item-sequlize.js");
 exports.mainData = (req, res, next) => {
+  // let isLogin = req.get("Cookie").split(";")[2].trim().split("=")[1] === `true`;
   // ! anyshronus data
   Produks.find()
     .then((produk) => {
@@ -8,7 +9,7 @@ exports.mainData = (req, res, next) => {
         doctitle: `Halaman Produk Page`,
         path: `/`,
         produks: produk,
-        autentikasi: req.isLogin,
+        autentikasi: false,
       });
     })
     .catch((err) => console.log(err));
