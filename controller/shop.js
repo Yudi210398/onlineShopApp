@@ -9,7 +9,7 @@ exports.mainData = (req, res, next) => {
         doctitle: `Halaman Produk Page`,
         path: `/`,
         produks: produk,
-        autentikasi: false,
+        autentikasi: req.session.user,
       });
     })
     .catch((err) => console.log(err));
@@ -39,7 +39,7 @@ exports.produks = (req, res, next) => {
         doctitle: `Produk Page`,
         path: "/produks",
         produks: produk,
-        autentikasi: req.isLogin,
+        autentikasi: req.session.user,
       });
     })
     .catch((err) => console.log(err));
@@ -73,7 +73,7 @@ exports.cart = (req, res, next) => {
         path: `/cart`,
         produks: data1,
         produksd: req.user,
-        autentikasi: req.isLogin,
+        autentikasi: req.session.user,
       });
     })
     .catch((err) => console.log(err));
@@ -175,7 +175,7 @@ exports.getProduct = (req, res, next) => {
       path: `/produks/detail`,
       produk: data,
       hapus: false,
-      autentikasi: req.isLogin,
+      autentikasi: req.session.user,
     });
   });
 };
@@ -205,13 +205,13 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.orders = (req, res, next) => {
-  Order.find({ "user.userId": req.user._id })
+  Order.find({ "user.userId": req.session.user._id })
     .then((data) => {
       res.render(`shop/orders`, {
         doctitle: `Oreders Page`,
         path: `/orders`,
         orders: data,
-        autentikasi: req.isLogin,
+        autentikasi: req.session.user,
       });
     })
     .catch((err) => console.log(err));

@@ -5,7 +5,7 @@ exports.inputData = (req, res, next) => {
     doctitle: `Input Produk Page`,
     path: `/admin/data-produk/`,
     editing: false,
-    autentikasi: req.isLogin,
+    autentikasi: req.session.user,
   });
 };
 
@@ -46,7 +46,7 @@ exports.edithProduk = (req, res, next) => {
           path: `/admin/edith-produk/`,
           editing: dataQuery,
           produk: datas,
-          autentikasi: req.isLogin,
+          autentikasi: req.session.user,
         });
     })
     .catch((err) => console.log(err));
@@ -62,7 +62,7 @@ exports.adminProduks = (req, res, next) => {
         doctitle: `Admin Produk Page`,
         produks: produk,
         path: `/admin/admin-produk`,
-        autentikasi: req.isLogin,
+        autentikasi: req.session.user,
       });
     })
     .catch((err) => console.log(err));
@@ -115,7 +115,7 @@ exports.deleteProduk = (req, res, next) => {
         path: `/admin/hapus-produk/`,
         produk: produk,
         hapus: dataDelete,
-        autentikasi: req.isLogin,
+        autentikasi: req.session.user,
       });
   });
 };

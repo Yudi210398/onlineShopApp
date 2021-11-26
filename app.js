@@ -32,15 +32,6 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  Users.findById("61969ab346161fc58f5b0d80")
-    .then((users) => {
-      req.user = users;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
-
 // app.use((req, res, next) => {
 //   Users.findById("6186efebe09b75795013ede1")
 //     .then((user) => {
