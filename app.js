@@ -6,10 +6,11 @@ const mainData = require(`./routers/shop/mainPage.js`);
 const admin = require("./routers/admin/admin.js");
 const Auth = require("./routers/auth/authRoute.js");
 const error = require("./controller/error.js");
+const Produks = require("./model/logicDataAnys.js");
 const mongoose = require(`mongoose`);
 const Users = require("./model/users.js");
-const session = require("express-session");
-const monggoDbSsssion = require("connect-mongodb-session")(session);
+const sessions = require("express-session");
+const monggoDbSsssion = require("connect-mongodb-session")(sessions);
 const urlMongoDb =
   "mongodb+srv://yudirunat:kawasanzombi1998@cluster0.oaqmd.mongodb.net/shopOnline?retryWrites=true&w=majority";
 const port = 3000;
@@ -24,13 +25,27 @@ app.set("views", "views");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
-  session({
+  sessions({
     secret: `rahasia`,
     resave: false,
     saveUninitialized: false,
     store: mongoStore,
   })
 );
+
+app.use((req, res, next) => {
+  if (!req.session.user) return next();
+  else {
+    Users.findById(req.session.user._id)
+      .then((users) => {
+        req.user = users;
+        return next(); //? taro disini
+      })
+      .catch((err) => console.log(err));
+  }
+
+  //! jangan menaruh next() di akhir kalo ada penggilan fungsi
+});
 
 // app.use((req, res, next) => {
 //   Users.findById("6186efebe09b75795013ede1")

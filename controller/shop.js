@@ -9,7 +9,7 @@ exports.mainData = (req, res, next) => {
         doctitle: `Halaman Produk Page`,
         path: `/`,
         produks: produk,
-        autentikasi: req.session.user,
+        autentikasi: req.user,
       });
     })
     .catch((err) => console.log(err));
@@ -39,7 +39,7 @@ exports.produks = (req, res, next) => {
         doctitle: `Produk Page`,
         path: "/produks",
         produks: produk,
-        autentikasi: req.session.user,
+        autentikasi: req.user,
       });
     })
     .catch((err) => console.log(err));
@@ -73,7 +73,7 @@ exports.cart = (req, res, next) => {
         path: `/cart`,
         produks: data1,
         produksd: req.user,
-        autentikasi: req.session.user,
+        autentikasi: req.user,
       });
     })
     .catch((err) => console.log(err));
@@ -167,15 +167,13 @@ exports.deleteCart = async (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const proId = req.params.ids;
 
-  console.log(proId, `tete debby`);
   Produks.findById(proId).then((data) => {
-    console.log(data);
     res.render("shop/produks-detail", {
       doctitle: `Produk Detail Page`,
       path: `/produks/detail`,
       produk: data,
       hapus: false,
-      autentikasi: req.session.user,
+      autentikasi: req.user,
     });
   });
 };
@@ -205,13 +203,14 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.orders = (req, res, next) => {
-  Order.find({ "user.userId": req.session.user._id })
+  console.log(req.user);
+  Order.find({ "user.userId": req.user._id })
     .then((data) => {
       res.render(`shop/orders`, {
         doctitle: `Oreders Page`,
         path: `/orders`,
         orders: data,
-        autentikasi: req.session.user,
+        autentikasi: req.user,
       });
     })
     .catch((err) => console.log(err));

@@ -26,26 +26,38 @@
                     <li class="nav-item"> 
                         <a class="nav-link <%= path === "/produks" ? "active" : "" %> " aria-current="page" href="/produks">produks</a>
                     </li>  
-                    <li class="nav-item"> 
-                        <a class="nav-link <%= path === "/cart" ? "active" : "" %> " aria-current="page" href="/cart">Keranjang</a>
-                    </li>  
-                    <li class="nav-item"> 
-                        <a class="nav-link <%= path === "/orders" ? "active" : "" %> " aria-current="page" href="/orders">orders</a>
-                    </li>   
-
-                <% if (autentikasi) { %>
-                    <li class="nav-item">
-                        <a class="nav-link <%= path ==='/admin/data-produk/' ? 'active' : '' %> " href="/admin/data-produk">Tambah Produk</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= path ==='/admin/admin-produk' ? 'active' : '' %> " href="/admin/admin-produk">admin produks</a>
-                    </li> 
+                    <% if (autentikasi) { %>
+                        <li class="nav-item"> 
+                            <a class="nav-link <%= path === "/cart" ? "active" : "" %> " aria-current="page" href="/cart">Keranjang</a>
+                        </li>  
+                        <li class="nav-item"> 
+                            <a class="nav-link <%= path === "/orders" ? "active" : "" %> " aria-current="page" href="/orders">orders</a>
+                        </li>   
+                        <li class="nav-item">
+                            <a class="nav-link <%= path ==='/admin/data-produk/' ? 'active' : '' %> " href="/admin/data-produk">Tambah Produk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= path ==='/admin/admin-produk' ? 'active' : '' %> " href="/admin/admin-produk">admin produks</a>
+                        </li> 
                 <% } %>
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link <%= path ==='/login' ? 'active' : '' %> " href="/login">Login</a>
-                    </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Account
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <% if (!autentikasi) { %>
+                                <li class="nav-item">
+                                    <a class="dropdown-item <%= path ==='/login' ? 'active' : '' %> " href="/login">Login</a>
+                                </li>
+                            <% } else { %> 
+                                <li>
+                                    <form action="/logout" method="POST"><button class="dropdown-item" type="submit">LOGOUT</button></form>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </li>
                 </ul>
             </div>
         </div>

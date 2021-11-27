@@ -1,6 +1,8 @@
+<% if (autentikasi) { %>
 <form action="/cart" method="POST">
   <input type="hidden" name="produkId" value="<%= produk._id %>" />
   <button class="btn btn-outline-primary" type="submit ">
     Tambah Ke Keranjang
   </button>
 </form>
+<% } %>

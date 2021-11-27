@@ -1,11 +1,11 @@
 const Produks = require("../model/logicDataAnys.js");
 
-exports.inputData = (req, res, next) => {
+exports.inputData = async (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
     path: `/admin/data-produk/`,
     editing: false,
-    autentikasi: req.session.user,
+    autentikasi: req.user,
   });
 };
 
@@ -27,7 +27,7 @@ exports.postData = (req, res, next) => {
   produks
     .save()
     .then((result) => {
-      console.log(`selesai buat produks`);
+      req.barang = result;
       setTimeout(() => res.redirect("/"), 100);
     })
     .catch((err) => console.log(err));
@@ -46,7 +46,7 @@ exports.edithProduk = (req, res, next) => {
           path: `/admin/edith-produk/`,
           editing: dataQuery,
           produk: datas,
-          autentikasi: req.session.user,
+          autentikasi: req.user,
         });
     })
     .catch((err) => console.log(err));
@@ -57,12 +57,11 @@ exports.adminProduks = (req, res, next) => {
   Produks.find()
     .populate("userId")
     .then((produk) => {
-      console.log(produk);
       res.render(`admin/admin`, {
         doctitle: `Admin Produk Page`,
         produks: produk,
         path: `/admin/admin-produk`,
-        autentikasi: req.session.user,
+        autentikasi: req.user,
       });
     })
     .catch((err) => console.log(err));
@@ -115,7 +114,7 @@ exports.deleteProduk = (req, res, next) => {
         path: `/admin/hapus-produk/`,
         produk: produk,
         hapus: dataDelete,
-        autentikasi: req.session.user,
+        autentikasi: req.user,
       });
   });
 };

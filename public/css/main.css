@@ -203,3 +203,7 @@ p {
 .card-title {
   margin-top: 10px;
 }
+
+.logut {
+  display: flex;
+}
