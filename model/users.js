@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Users = new Schema({
-  nama: { type: String, required: true },
   email: { type: String, required: true },
+  password: { type: String, required: true },
   keranjang: {
     item: [
       {
@@ -20,9 +20,8 @@ const Users = new Schema({
   },
 });
 
-let hargatotalKeranjang = function (data) {
-  return data.map((a) => a.hargaProduk * a.quantity).reduce((a, b) => a + b, 0);
-};
+let hargatotalKeranjang = (data) =>
+  data.map((a) => a.hargaProduk * a.quantity).reduce((a, b) => a + b, 0);
 
 let hapusFungsi = function (data, object) {
   let totalHargas = hargatotalKeranjang(data);

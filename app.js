@@ -6,7 +6,6 @@ const mainData = require(`./routers/shop/mainPage.js`);
 const admin = require("./routers/admin/admin.js");
 const Auth = require("./routers/auth/authRoute.js");
 const error = require("./controller/error.js");
-const Produks = require("./model/logicDataAnys.js");
 const mongoose = require(`mongoose`);
 const Users = require("./model/users.js");
 const sessions = require("express-session");
@@ -65,16 +64,6 @@ mongoose
   .connect(urlMongoDb)
   .then((result) => {
     app.listen(port);
-    Users.findOne().then((data) => {
-      if (!data) {
-        const user = new Users({
-          nama: `Yudi Runat Masneno`,
-          email: `yudi.berland@gmail.com`,
-        });
-        user.save();
-      }
-    });
-
     console.log(`conek`);
   })
   .catch((err) => console.log(err));

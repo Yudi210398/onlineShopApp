@@ -3,6 +3,7 @@ const Order = require("../model/oder-item-sequlize.js");
 exports.mainData = (req, res, next) => {
   // let isLogin = req.get("Cookie").split(";")[2].trim().split("=")[1] === `true`;
   // ! anyshronus data
+  console.log(req.session, `tete hana`);
   Produks.find()
     .then((produk) => {
       res.render(`shop/mainPage`, {

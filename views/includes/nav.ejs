@@ -51,6 +51,10 @@
                                 <li class="nav-item">
                                     <a class="dropdown-item <%= path ==='/login' ? 'active' : '' %> " href="/login">Login</a>
                                 </li>
+                                <br>
+                                <li class="nav-item">
+                                    <a class="dropdown-item <%= path ==='/daftar' ? 'active' : '' %> " href="/daftar">SignUp</a>
+                                </li>
                             <% } else { %> 
                                 <li>
                                     <form action="/logout" method="POST"><button class="dropdown-item" type="submit">LOGOUT</button></form>
