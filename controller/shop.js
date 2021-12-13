@@ -3,9 +3,9 @@ const Order = require("../model/oder-item-sequlize.js");
 exports.mainData = (req, res, next) => {
   // let isLogin = req.get("Cookie").split(";")[2].trim().split("=")[1] === `true`;
   // ! anyshronus data
-  console.log(req.session, `tete hana`);
   Produks.find()
     .then((produk) => {
+      console.log(req.user);
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
         path: `/`,
@@ -65,7 +65,7 @@ exports.produks = (req, res, next) => {
 
 exports.cart = (req, res, next) => {
   req.user
-    .populate("keranjang.item.produkId")
+    .populate("keranjang.item.produkIds")
     .then((produk) => {
       const data1 = produk.keranjang.item;
 
@@ -114,9 +114,10 @@ exports.cart = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
-  let dataId = req.body.produkId;
+  let dataId = req.body.produkIds;
   Produks.findById(dataId)
     .then((data) => {
+      console.log(req.user);
       return req.user.addProduk(data);
     })
     .then((data) => res.redirect("/cart"))
@@ -181,15 +182,15 @@ exports.getProduct = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
   req.user
-    .populate("keranjang.item.produkId")
+    .populate("keranjang.item.produkIds")
     .then((produk) => {
       const produks = produk.keranjang.item.map((data) => {
-        return { quantity: data.quantity, produk: { ...data.produkId._doc } };
+        return { quantity: data.quantity, produk: { ...data.produkIds._doc } };
       });
       const order = new Order({
         totalHarga: req.user.keranjang.totalHarga,
         user: {
-          nama: req.user.nama,
+          email: req.user.email,
           userId: req.user._id,
         },
         produks: produks,

@@ -9,6 +9,7 @@ const error = require("./controller/error.js");
 const mongoose = require(`mongoose`);
 const Users = require("./model/users.js");
 const sessions = require("express-session");
+const csrf = require("csurf");
 const monggoDbSsssion = require("connect-mongodb-session")(sessions);
 const urlMongoDb =
   "mongodb+srv://yudirunat:kawasanzombi1998@cluster0.oaqmd.mongodb.net/shopOnline?retryWrites=true&w=majority";
@@ -18,6 +19,7 @@ const mongoStore = new monggoDbSsssion({
   collection: "session",
 });
 
+const csrfKeamanan = csrf();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
@@ -32,6 +34,8 @@ app.use(
   })
 );
 
+app.use(csrfKeamanan); //! Posisi middleware csrf harus ada dibawah middleware sesion konfigurasi (Parnting)
+
 app.use((req, res, next) => {
   if (!req.session.user) return next();
   else {
@@ -44,6 +48,16 @@ app.use((req, res, next) => {
   }
 
   //! jangan menaruh next() di akhir kalo ada penggilan fungsi
+});
+
+app.use((req, res, next) => {
+  console.log(req.session.user);
+  res.locals.csrfToken = req.csrfToken();
+  res.locals.pesan = req.session.pesan;
+  res.locals.pesan2 = req.session.pesan2;
+  delete req.session.pesan;
+  delete req.session.pesan2;
+  next();
 });
 
 // app.use((req, res, next) => {

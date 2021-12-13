@@ -4,8 +4,10 @@ const routerAuth = express.Router();
 
 routerAuth.get("/login", contoller.login);
 routerAuth.get("/daftar", contoller.getDaftar);
+routerAuth.get("/resetpass", contoller.getReset);
 routerAuth.post("/login", contoller.postData);
 routerAuth.post("/logout", contoller.postLogout);
 routerAuth.post("/daftar", contoller.postDaftar);
+routerAuth.post("/resetpass", contoller.emailResetPass);
 
 module.exports = routerAuth;

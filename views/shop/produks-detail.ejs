@@ -19,6 +19,7 @@
             <% if (hapus) { %>
                 <form action="/admin/hapus-produks" method="POST">
                     <input type="hidden" name="id" value="<%= produk._id %>" />
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button class="btn btn-outline-danger" type="submit ">
                         Hapus Produk
                     </button>

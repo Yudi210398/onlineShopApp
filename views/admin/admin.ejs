@@ -28,7 +28,7 @@
           <div class="jejer">
             <p class="btn btn-outline-primary adminbtn">Rp. <%= el.hargaIndo %></p>
 
-            <a class="edit" href="/admin/edit-produks/<%= el._id %>?edita=true">
+            <a class="edit" href="/admin/edit-produks/<%= el._id %>?edita=edit-data">
               <button
                 type="submit"
                 class="btn btn-outline-warning adminbtn adminbtnedith"
@@ -37,12 +37,12 @@
               </button>
             </a>
             <br><br>
-            <a href="/admin/hapus-produks/<%= el._id %>?delete=true">
+            <a href="/admin/hapus-produks/<%= el._id %>?delete=hapus-data">
               <button
                 type="submit"
                 class="btn btn-outline-danger adminbtn adminbtndelete"
               >
-                delete Produks
+                Hapus Produks
               </button>
             </a>
           </div>

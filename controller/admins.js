@@ -119,7 +119,8 @@ exports.deleteProduk = (req, res, next) => {
   });
 };
 
-exports.postHapusProduk = (req, res, next) => {
+exports.postHapusProduk = async (req, res, next) => {
+  let data = await Produks.find();
   const dataIdEdit = req.body.id;
   req.user.deleteKeranjangAdmin(dataIdEdit);
   Produks.findByIdAndRemove(dataIdEdit)

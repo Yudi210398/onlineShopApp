@@ -21,7 +21,7 @@ const Orders = new Schema({
   ],
   totalHarga: { type: String, required: true },
   user: {
-    nama: {
+    email: {
       type: String,
       required: true,
     },

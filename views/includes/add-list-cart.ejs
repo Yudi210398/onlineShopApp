@@ -1,6 +1,7 @@
 <% if (autentikasi) { %>
 <form action="/cart" method="POST">
-  <input type="hidden" name="produkId" value="<%= produk._id %>" />
+  <input type="hidden" name="produkIds" value="<%= produk._id %>" />
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
   <button class="btn btn-outline-primary" type="submit ">
     Tambah Ke Keranjang
   </button>

@@ -57,7 +57,9 @@
                                 </li>
                             <% } else { %> 
                                 <li>
-                                    <form action="/logout" method="POST"><button class="dropdown-item" type="submit">LOGOUT</button></form>
+                                    <form action="/logout" method="POST">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button class="dropdown-item" type="submit">LOGOUT</button></form>
                                 </li>
                                 <% } %>
                             </ul>

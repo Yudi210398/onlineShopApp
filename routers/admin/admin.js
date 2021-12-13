@@ -1,12 +1,12 @@
 const express = require("express");
 const contoller = require("../../controller/admins.js");
 const routerAdmin = express.Router();
-
-routerAdmin.get("/data-produk", contoller.inputData);
-routerAdmin.get(`/admin-produk/`, contoller.adminProduks);
-routerAdmin.get(`/edit-produks/:id`, contoller.edithProduk);
-routerAdmin.get("/hapus-produks/:id", contoller.deleteProduk);
-routerAdmin.post(`/data`, contoller.postData);
-routerAdmin.post("/edit-produks", contoller.postEdithProduks);
-routerAdmin.post("/hapus-produks", contoller.postHapusProduk);
+const middlerAuth = require("../../middleware/authRoute.js");
+routerAdmin.get("/data-produk", middlerAuth, contoller.inputData);
+routerAdmin.get(`/admin-produk/`, middlerAuth, contoller.adminProduks);
+routerAdmin.get(`/edit-produks/:id`, middlerAuth, contoller.edithProduk);
+routerAdmin.get("/hapus-produks/:id", middlerAuth, contoller.deleteProduk);
+routerAdmin.post(`/data`, middlerAuth, contoller.postData);
+routerAdmin.post("/edit-produks", middlerAuth, contoller.postEdithProduks);
+routerAdmin.post("/hapus-produks", middlerAuth, contoller.postHapusProduk);
 module.exports = routerAdmin;

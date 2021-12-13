@@ -12,11 +12,11 @@
                     <div class="row justify-content-md-start align-items-center">
                     <div class="col">
                     <div class="row align-items-center">
-                            <div class="col col-lg-6 d-flex justify-content-end">
-                                <img src="<%= e.produkId.gambarProduk %>" alt="gambar" height="100px" width="155px">
+                            <div class="col col-lg-7 d-flex justify-content-end">
+                                <img src="<%= e.produkIds.gambarProduk %>" alt="gambar" height="100px" width="155px">
                             </div>
-                            <div class="col-md-6 d-flex justify-content-start">
-                                <p class="lead"><%= e.produkId.namaProduk %></p>
+                            <div class="col-md-5 d-flex justify-content-start">
+                                <p class="lead"><%= e.produkIds.namaProduk %></p>
                             </div>
                     </div>
                     </div>
@@ -24,7 +24,7 @@
                     
                         <div class="row align-items-center">
                             <div class="col col-lg-5 d-flex justify-content-start">
-                                <p class="lead">Rp.<%= e.produkId.hargaIndo%></p>
+                                <p class="lead">Rp.<%= e.produkIds.hargaIndo%></p>
                             </div>
                             <div class="col-md-6  d-flex justify-content-center">
                                 <p class="lead">(<%= e.quantity %>) Quantity</p>
@@ -33,6 +33,7 @@
                     </div>
                     <div class="col">
                         <form action="/cart/delete-item" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             <input type="hidden" value="<%= e._id %> " name="prodIds">
                             <button class="btn btn-danger" type="submit" >Hapus</button>
                         </form>
@@ -46,6 +47,7 @@
             <div class="row justify-content-md-start align-items-center">
                 <div class="col col-lg-6">
                     <form action="/order-data" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button class="btn btn-outline-dark position-absolute top-90 start-50 translate-middle" type="submit">BELI BARANG ! </button>
                     </form>
                 </div>
@@ -58,3 +60,4 @@
     </main>
 </div>
 <%- include('../includes/end.ejs') %>  
+

@@ -7,18 +7,39 @@
 <div class="container">
     <div class="row justify-content-center"> 
         <div class="col-5">
+            <% if (pesan) { %>
+                <div class="alert alert-danger" role="alert">
+                    <h1>Email Atau Password Salah </h1>
+                </div>
+            <% } %>
+
+            <% if (pesan2 === "resetpass") { %>
+                <div class="alert alert-success" role="alert">
+                    <h1>Berhasil reset Password !! cek email anda untuk langkah selanjutnya</h1>
+                </div>
+            <% } else if (pesan2 === "login") { %>
+                <div class="alert alert-success" role="alert">
+                    <h1>Berhasil Daftar dan Silahkan Login</h1>
+                </div>
+            <% } %>
+
             <form action="/login" method="POST">
                 <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required placeholder="Masukan email">
+                <input type="email" class="form-control" id="email" value="" name="email" required placeholder="Masukan email">
                 </div>
                 <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
                 <input type="password" name="paslogin" required placeholder="Masukan Password" class="form-control" id="username1">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-primary ms-auto">Login</button>
+                <a class="btn btn-danger" href="/resetpass">Lupa password</a>
             </form>
             </div>
+
+
+
             </div>
 </div>
 

@@ -4,10 +4,12 @@ const Schema = mongoose.Schema;
 const Users = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
+  tokenreset: String,
+  tokenExpiyed: Date,
   keranjang: {
     item: [
       {
-        produkId: {
+        produkIds: {
           type: Schema.Types.ObjectId,
           ref: "Produks",
           required: true,
@@ -39,7 +41,7 @@ Users.methods.clearKeranjang = function () {
 
 Users.methods.editData = function (data) {
   const kerajangindex = this.keranjang?.item?.findIndex(
-    (cp) => cp.produkId.toString() === data._id.toString()
+    (cp) => cp.produkIds.toString() === data._id.toString()
   );
   if (kerajangindex === -1) return;
   this.keranjang.item[kerajangindex].hargaProduk = data.hargaProduk;
@@ -60,7 +62,7 @@ Users.methods.deleteKeranjang = function (proId) {
 
 Users.methods.deleteKeranjangAdmin = function (proId) {
   const updatedCartItems = this.keranjang?.item?.filter(
-    (items) => items.produkId.toString().trim() !== proId.toString().trim()
+    (items) => items.produkIds.toString().trim() !== proId.toString().trim()
   );
   hapusFungsi(updatedCartItems, this);
 };
@@ -68,7 +70,7 @@ Users.methods.deleteKeranjangAdmin = function (proId) {
 Users.methods.addProduk = function (produk) {
   // ! Logic tambah Produk keranjang
   const kerajangindex = this.keranjang?.item?.findIndex(
-    (cp) => cp.produkId.toString() === produk._id.toString()
+    (cp) => cp.produkIds.toString() === produk._id.toString()
   );
   let quantityBaru = 1;
   let updateDataProduk =
@@ -78,7 +80,7 @@ Users.methods.addProduk = function (produk) {
     updateDataProduk[kerajangindex].quantity = quantityBaru;
   } else
     updateDataProduk.push({
-      produkId: produk._id,
+      produkIds: produk._id,
       quantity: 1,
       hargaProduk: produk.hargaProduk,
     });
