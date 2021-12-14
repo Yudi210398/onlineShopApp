@@ -1,4 +1,5 @@
 const Produks = require("../model/logicDataAnys.js");
+const Users = require("../model/users.js");
 
 exports.inputData = async (req, res, next) => {
   res.render(`admin/edit-produk`, {
@@ -54,7 +55,7 @@ exports.edithProduk = (req, res, next) => {
 
 exports.adminProduks = (req, res, next) => {
   // ! anyshronus data
-  Produks.find()
+  Produks.find({ userId: req.user._id })
     .populate("userId")
     .then((produk) => {
       res.render(`admin/admin`, {
@@ -75,26 +76,33 @@ exports.adminProduks = (req, res, next) => {
   // });
 };
 
-exports.postEdithProduks = (req, res, next) => {
-  let datas = req.body.idProduk;
-  let namaProduk = req.body.namaProduk;
-  let gambarProduk = req.body.gambarProduk;
-  let hargaProduk = req.body.hargaProduk;
-  let deskripsi = req.body.deskripsi;
-  let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
-  Produks.findById(datas)
-    .then((data) => {
-      data.namaProduk = namaProduk;
-      data.gambarProduk = gambarProduk;
-      data.hargaProduk = hargaProduk;
-      data.deskripsi = deskripsi;
-      data.hargaIndo = hargaIndo;
-      req.user.editData(data);
-      return data.save();
-      // req.user.editdataItem(data);
-    })
-    .then((result) => setTimeout(() => res.redirect("/"), 100))
-    .catch((err) => console.log(err));
+exports.postEdithProduks = async (req, res, next) => {
+  try {
+    let datas = req.body.idProduk;
+    let namaProduk = req.body.namaProduk;
+    let gambarProduk = req.body.gambarProduk;
+    let hargaProduk = req.body.hargaProduk;
+    let deskripsi = req.body.deskripsi;
+    let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
+    let data = await Produks.findById(datas);
+    console.log(data, `pepe`);
+    if (data.userId.toString() !== req.user._id.toString())
+      return res.redirect("/");
+
+    data.namaProduk = namaProduk;
+    data.gambarProduk = gambarProduk;
+    data.hargaProduk = hargaProduk;
+    data.deskripsi = deskripsi;
+    data.hargaIndo = hargaIndo;
+    let userss = await Users.find();
+    userss.map(async (x) => await x.editData(data));
+
+    await data.save();
+    setTimeout(() => res.redirect("/"), 100);
+    // req.user.editdataItem(data);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.deleteProduk = (req, res, next) => {
@@ -120,9 +128,14 @@ exports.deleteProduk = (req, res, next) => {
 };
 
 exports.postHapusProduk = async (req, res, next) => {
-  let data = await Produks.find();
   const dataIdEdit = req.body.id;
-  req.user.deleteKeranjangAdmin(dataIdEdit);
+  let data = await Users.find();
+  let data1 = await Produks.findById(dataIdEdit);
+  if (data1.userId.toString() !== req.user._id.toString())
+    return res.redirect("/admin/admin-produk");
+
+  data.map(async (x) => await x.deleteKeranjangAdmin(dataIdEdit));
+
   Produks.findByIdAndRemove(dataIdEdit)
     .then(() => res.redirect("/"))
     .catch((err) => console.log(err));

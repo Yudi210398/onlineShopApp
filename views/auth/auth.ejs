@@ -21,6 +21,14 @@
                 <div class="alert alert-success" role="alert">
                     <h1>Berhasil Daftar dan Silahkan Login</h1>
                 </div>
+            <% } else if (pesan2 === "resetKadaluarsa") { %>
+                <div class="alert alert-danger" role="alert">
+                    <h1>Batas waktu pergantian password sudah lewat, silahkan klick tombol <i>lupa password </i>, agar waktu pergantian diperpanjang</h1>
+                </div>
+            <% } else if (pesan2 === "berhasilGanti") { %>
+                <div class="alert alert-success" role="alert">
+                    <h1>Berhasil diganti, silahkan login dan gunakan password baru anda</h1>
+                </div>
             <% } %>
 
             <form action="/login" method="POST">

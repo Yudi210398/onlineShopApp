@@ -96,20 +96,56 @@ exports.postLogout = (req, res, next) => {
   });
 };
 exports.newPassword = async (req, res, next) => {
-  const token = req.params.token;
-  let user = await Users.findOne({
-    tokenreset: token,
-    tokenExpiyed: { $gt: Date.now() },
-  });
-  if (!user) {
-    req.session.pesan2 = `resetKadaluarsa`;
-    return res.redirect("/login");
-  } else
-    res.render(`auth/reset`, {
-      doctitle: `reset`,
-      path: "/reset",
-      autentikasi: req.session.user,
+  try {
+    const token = req.params.token.trim();
+    let user = await Users.findOne({
+      tokenreset: token,
+      tokenExpiyed: { $gt: Date.now() },
     });
+    if (!user) {
+      req.session.pesan2 = `resetKadaluarsa`;
+      return res.redirect("/login");
+    } else
+      res.render(`auth/new-pass`, {
+        doctitle: `New Password`,
+        path: "/new-pass",
+        autentikasi: req.session.user,
+        userId: user._id.toString(),
+        passwordToken: user.tokenreset,
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.postResetPasswordNew = async (req, res, next) => {
+  try {
+    let newPassword = req.body.password;
+    let tokenPass = req.body.passwordToken.trim();
+    let id = req.body.userId.trim();
+    console.log(id);
+    console.log(req.body.userId);
+    console.log(req.body.userId === id);
+    let user = await Users.findOne({
+      tokenreset: tokenPass,
+      tokenExpiyed: { $gt: Date.now() },
+      _id: id,
+    });
+    if (!user) {
+      req.session.pesan2 = `resetKadaluarsa`;
+      return res.redirect("/login");
+    } else {
+      let hasilHashPass = await encryptPassword.hash(newPassword, 12);
+      user.password = hasilHashPass;
+      user.tokenExpiyed = undefined;
+      user.tokenreset = undefined;
+      await user.save();
+      req.session.pesan2 = `berhasilGanti`;
+      return res.redirect("/login");
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.emailResetPass = async (req, res, next) => {
