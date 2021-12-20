@@ -7,12 +7,18 @@
 <div class="container">
     <div class="row justify-content-center"> 
         <div class="col-5">
-            <% if (pesan) { %>
+            <% if (datass) { %>
                 <div class="alert alert-danger" role="alert">
-                    <h1>Email Sudah Terdaftar, Gunakan email lain </h1>
+                    <h1><%= datass %> </h1>
                 </div>
             <% } %>
-            <form action="/daftar" method="POST">
+
+            <% if (pesan2 === `emailSama`) { %>
+                <div class="alert alert-danger" role="alert">
+                    <h1> Email sudah terdaftar </h1>
+                </div>
+            <% } %>
+            <form action="/daftar" method="POST" novalidate>
                 <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" required placeholder="Masukan email">

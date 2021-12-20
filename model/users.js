@@ -34,6 +34,34 @@ let hapusFungsi = function (data, object) {
   return object.save();
 };
 
+Users.methods.addProduk = function (produk) {
+  // ! Logic tambah Produk keranjang
+  const kerajangindex = this.keranjang?.item?.findIndex(
+    (cp) => cp.produkIds.toString() === produk._id.toString()
+  );
+  let quantityBaru = 1;
+  let updateDataProduk =
+    this.keranjang?.item === undefined ? [] : [...this.keranjang.item];
+  if (kerajangindex >= 0) {
+    quantityBaru = this.keranjang.item[kerajangindex].quantity + 1;
+    updateDataProduk[kerajangindex].quantity = quantityBaru;
+  } else
+    updateDataProduk.push({
+      produkIds: produk._id,
+      quantity: 1,
+      hargaProduk: produk.hargaProduk,
+    });
+
+  let totalHarga = hargatotalKeranjang(updateDataProduk);
+
+  const updateProduk = {
+    item: updateDataProduk,
+    totalHarga: new Intl.NumberFormat("id-ID").format(totalHarga),
+  };
+  this.keranjang = updateProduk;
+  return this.save();
+};
+
 Users.methods.clearKeranjang = function () {
   this.keranjang = { item: [], totalHarga: undefined };
   return this.save();
@@ -65,34 +93,6 @@ Users.methods.deleteKeranjangAdmin = function (proId) {
     (items) => items.produkIds.toString().trim() !== proId.toString().trim()
   );
   hapusFungsi(updatedCartItems, this);
-};
-
-Users.methods.addProduk = function (produk) {
-  // ! Logic tambah Produk keranjang
-  const kerajangindex = this.keranjang?.item?.findIndex(
-    (cp) => cp.produkIds.toString() === produk._id.toString()
-  );
-  let quantityBaru = 1;
-  let updateDataProduk =
-    this.keranjang?.item === undefined ? [] : [...this.keranjang.item];
-  if (kerajangindex >= 0) {
-    quantityBaru = this.keranjang.item[kerajangindex].quantity + 1;
-    updateDataProduk[kerajangindex].quantity = quantityBaru;
-  } else
-    updateDataProduk.push({
-      produkIds: produk._id,
-      quantity: 1,
-      hargaProduk: produk.hargaProduk,
-    });
-
-  let totalHarga = hargatotalKeranjang(updateDataProduk);
-
-  const updateProduk = {
-    item: updateDataProduk,
-    totalHarga: new Intl.NumberFormat("id-ID").format(totalHarga),
-  };
-  this.keranjang = updateProduk;
-  return this.save();
 };
 
 module.exports = mongoose.model("Users", Users);

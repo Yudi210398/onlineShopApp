@@ -2,6 +2,7 @@ const encryptPassword = require("bcryptjs");
 const Users = require("../model/users.js");
 const nodemail = require("nodemailer");
 const crypto = require(`crypto`);
+const { validationResult } = require("express-validator/check");
 const tranporter = nodemail.createTransport({
   service: "gmail",
   auth: { user: `yudi.berland@gmail.com`, pass: `rjdnlrcfpfgsivvf` },
@@ -20,6 +21,7 @@ exports.getDaftar = (req, res, next) => {
     doctitle: `daftar`,
     path: "/daftar",
     autentikasi: req.session.user,
+    datass: false,
   });
 };
 
@@ -36,10 +38,7 @@ exports.postData = async (req, res, next) => {
     const email = req.body.email;
     const paslogin = req.body.paslogin;
     let users = await Users.findOne({ email });
-    if (!users) {
-      req.session.pesan = true;
-      return res.redirect("/login");
-    }
+
     let hasilPass = await encryptPassword.compare(paslogin, users.password);
     if (hasilPass) {
       req.session.user = users;
@@ -52,7 +51,6 @@ exports.postData = async (req, res, next) => {
     }
   } catch (err) {
     res.redirect("/login");
-    console.log(err.message);
     renderError(err.message);
   }
 };
@@ -62,9 +60,19 @@ exports.postDaftar = async (req, res, next) => {
     const email = req.body.email.trim();
     const password = req.body.passdaftar;
     const confrimPass = req.body.passulang;
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      return res.status(422).render(`auth/daftarUser`, {
+        doctitle: `daftar`,
+        path: "/daftar",
+        autentikasi: req.session.user,
+        datass: error.array()[0].msg,
+      });
+    }
     const dataLogin = await Users.findOne({ email });
     if (dataLogin) {
-      req.session.pesan = true;
+      req.session.pesan2 = `emailSama`;
       return res.redirect("/daftar");
     }
     const encryptPass = await encryptPassword.hash(password, 12);
@@ -86,7 +94,7 @@ exports.postDaftar = async (req, res, next) => {
       }
     );
   } catch (err) {
-    console.log(err);
+    console.log(err, `data`);
   }
 };
 
@@ -123,9 +131,6 @@ exports.postResetPasswordNew = async (req, res, next) => {
     let newPassword = req.body.password;
     let tokenPass = req.body.passwordToken.trim();
     let id = req.body.userId.trim();
-    console.log(id);
-    console.log(req.body.userId);
-    console.log(req.body.userId === id);
     let user = await Users.findOne({
       tokenreset: tokenPass,
       tokenExpiyed: { $gt: Date.now() },
