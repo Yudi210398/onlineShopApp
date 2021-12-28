@@ -21,15 +21,15 @@
             <form action="/daftar" method="POST" novalidate>
                 <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required placeholder="Masukan email">
+                <input type="email" class="form-control  <%= border.find(e => e.param === 'email') ? 'bordermerah' : '' %>" id="email" name="email" required placeholder="Masukan email" value="<%= inputLama.email %> ">
                 </div>
                 <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="passdaftar" required placeholder="Masukan Password" class="form-control" id="pass1">
+                <input type="password" name="passdaftar" required placeholder="Masukan Password" class="form-control  <%= border.find(e => e.param === 'passdaftar') ? 'bordermerah' : '' %>" id="pass1" value="<%= inputLama.password %>">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Masukan Ulang Password</label>
-                    <input type="password" name="passulang" required placeholder="Masukan Ulang Password" class="form-control" id="pass2">
+                    <input type="password" name="passulang" required placeholder="Masukan Ulang Password" class="form-control <%= border.find(e => e.param === 'passulang') ? 'bordermerah' : '' %>" id="pass2" value="<%= inputLama.confrimPass %>">
                     </div>
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit" class="btn btn-primary">Daftar</button>

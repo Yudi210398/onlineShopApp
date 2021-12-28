@@ -1,21 +1,44 @@
 const Produks = require("../model/logicDataAnys.js");
 const Users = require("../model/users.js");
-
+const { validationResult } = require("express-validator/check");
 exports.inputData = async (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
     path: `/admin/data-produk/`,
     editing: false,
     autentikasi: req.user,
+    errors: false,
+    datass: false,
+    border: [],
   });
 };
 
 exports.postData = (req, res, next) => {
-  let namaProduk = req.body.namaProduk;
+  let namaProduk = req.body.namaProduk.trim();
   let gambarProduk = req.body.gambarProduk;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
   let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
+  const error = validationResult(req);
+  console.log(error.array());
+  if (!error.isEmpty()) {
+    return res.status(422).render(`admin/edit-produk`, {
+      doctitle: `Input Produk Page`,
+      path: `/admin/data-produk/`,
+      editing: false,
+      autentikasi: req.user,
+      datass: error.array()[0].msg,
+      errors: true,
+      produk: {
+        namaProduk,
+        gambarProduk,
+        hargaProduk,
+        deskripsi,
+      },
+      border: error.array(),
+    });
+  }
+
   let produks = new Produks({
     namaProduk,
     hargaProduk,
@@ -31,7 +54,11 @@ exports.postData = (req, res, next) => {
       req.barang = result;
       setTimeout(() => res.redirect("/"), 100);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.edithProduk = (req, res, next) => {
@@ -48,9 +75,17 @@ exports.edithProduk = (req, res, next) => {
           editing: dataQuery,
           produk: datas,
           autentikasi: req.user,
+          errors: false,
+          datass: false,
+          border: [],
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.adminProduks = (req, res, next) => {
@@ -78,14 +113,35 @@ exports.adminProduks = (req, res, next) => {
 
 exports.postEdithProduks = async (req, res, next) => {
   try {
-    let datas = req.body.idProduk;
+    let datas = req.body.idProduk.trim();
     let namaProduk = req.body.namaProduk;
     let gambarProduk = req.body.gambarProduk;
     let hargaProduk = req.body.hargaProduk;
     let deskripsi = req.body.deskripsi;
     let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
+
+    const error = validationResult(req);
+    console.log(error.array());
+    if (!error.isEmpty()) {
+      return res.status(422).render(`admin/edit-produk`, {
+        doctitle: `Input Edith Page`,
+        path: `/admin/data-produk/`,
+        editing: true,
+        autentikasi: req.user,
+        datass: error.array()[0].msg,
+        errors: true,
+        produk: {
+          namaProduk,
+          gambarProduk,
+          hargaProduk,
+          deskripsi,
+          _id: datas,
+        },
+        border: error.array(),
+      });
+    }
+
     let data = await Produks.findById(datas);
-    console.log(data, `pepe`);
     if (data.userId.toString() !== req.user._id.toString())
       return res.redirect("/");
 
@@ -128,15 +184,20 @@ exports.deleteProduk = (req, res, next) => {
 };
 
 exports.postHapusProduk = async (req, res, next) => {
-  const dataIdEdit = req.body.id;
-  let data = await Users.find();
-  let data1 = await Produks.findById(dataIdEdit);
-  if (data1.userId.toString() !== req.user._id.toString())
-    return res.redirect("/admin/admin-produk");
+  try {
+    const dataIdEdit = req.body.id;
+    let data = await Users.find();
+    let data1 = await Produks.findById(dataIdEdit);
+    if (data1.userId.toString() !== req.user._id.toString())
+      return res.redirect("/admin/admin-produk");
 
-  data.map(async (x) => await x.deleteKeranjangAdmin(dataIdEdit));
+    data.map(async (x) => await x.deleteKeranjangAdmin(dataIdEdit));
 
-  Produks.findByIdAndRemove(dataIdEdit)
-    .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
+    await Produks.findByIdAndRemove(dataIdEdit);
+    res.redirect("/");
+  } catch (err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };

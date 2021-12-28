@@ -2,7 +2,7 @@ const encryptPassword = require("bcryptjs");
 const Users = require("../model/users.js");
 const nodemail = require("nodemailer");
 const crypto = require(`crypto`);
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 const tranporter = nodemail.createTransport({
   service: "gmail",
   auth: { user: `yudi.berland@gmail.com`, pass: `rjdnlrcfpfgsivvf` },
@@ -22,6 +22,12 @@ exports.getDaftar = (req, res, next) => {
     path: "/daftar",
     autentikasi: req.session.user,
     datass: false,
+    inputLama: {
+      email: "",
+      password: "",
+      confrimPass: "",
+    },
+    border: [],
   });
 };
 
@@ -42,16 +48,15 @@ exports.postData = async (req, res, next) => {
     let hasilPass = await encryptPassword.compare(paslogin, users.password);
     if (hasilPass) {
       req.session.user = users;
-      return await req.session.save(() => {
-        res.redirect("/");
-      });
+      return await req.session.save(() => res.redirect("/"));
     } else {
       req.session.pesan = true;
       res.redirect("/login");
     }
   } catch (err) {
+    req.session.pesan = true;
     res.redirect("/login");
-    renderError(err.message);
+    console.log(err);
   }
 };
 
@@ -61,13 +66,19 @@ exports.postDaftar = async (req, res, next) => {
     const password = req.body.passdaftar;
     const confrimPass = req.body.passulang;
     const error = validationResult(req);
-
+    console.log(error.array());
     if (!error.isEmpty()) {
       return res.status(422).render(`auth/daftarUser`, {
         doctitle: `daftar`,
         path: "/daftar",
         autentikasi: req.session.user,
         datass: error.array()[0].msg,
+        inputLama: {
+          email,
+          password,
+          confrimPass,
+        },
+        border: error.array(),
       });
     }
     const dataLogin = await Users.findOne({ email });

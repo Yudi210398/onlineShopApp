@@ -211,3 +211,12 @@ p {
 .btn-primary {
   margin-right: 15px;
 }
+
+.bordermerah {
+  border-color: #dc3545;
+}
+
+.center500 {
+  text-align: center;
+  margin-top: 59px;
+}

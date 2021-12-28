@@ -5,7 +5,7 @@ const app = express();
 const mainData = require(`./routers/shop/mainPage.js`);
 const admin = require("./routers/admin/admin.js");
 const Auth = require("./routers/auth/authRoute.js");
-const error = require("./controller/error.js");
+const error = require("./routers/error/error.js");
 const mongoose = require(`mongoose`);
 const Users = require("./model/users.js");
 const sessions = require("express-session");
@@ -18,6 +18,7 @@ const mongoStore = new monggoDbSsssion({
   uri: urlMongoDb,
   collection: "session",
 });
+const middlerAuth = require("./middleware/authRoute.js");
 
 const csrfKeamanan = csrf();
 app.set("view engine", "ejs");
@@ -41,10 +42,13 @@ app.use((req, res, next) => {
   else {
     Users.findById(req.session.user._id)
       .then((users) => {
+        if (!users) return next();
         req.user = users;
         return next(); //? taro disini
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        next(new Error(err));
+      });
   }
 
   //! jangan menaruh next() di akhir kalo ada penggilan fungsi
@@ -71,7 +75,14 @@ app.use((req, res, next) => {
 app.use(mainData);
 app.use("/admin", admin);
 app.use(Auth);
-app.use(error.error);
+app.use(middlerAuth, error);
+app.use((error, req, res, next) => {
+  res.render(`error500`, {
+    doctitle: `Error Page 500`,
+    path: "",
+    autentikasi: req.user,
+  });
+});
 
 mongoose
   .connect(urlMongoDb)

@@ -6,25 +6,31 @@
   <div class="container">
     <div class="row justify-content-start"> 
       <div class="col-4">
+        <br>
+        <% if (datass) { %>
+          <div class="alert alert-danger" role="alert">
+              <h1><%= datass %> </h1>
+          </div>
+      <% } %>
         <form action="/admin/<% if (editing) { %>edit-produks<% } else { %>data<% }  %>" method="POST">
           <input
-            type="text" 
-            class="form-control"
+            type="text"
+            value="<% if (editing  || errors) { %><%= produk.namaProduk %><% } %>"
+            class="form-control <%= border.find(e => e.param === 'namaProduk') ? 'bordermerah' : '' %>"
             name="namaProduk"
             placeholder="Masukan Nama Produk"
             id="namaProduk"
-            value="<% if (editing) { %><%= produk.namaProduk %> <% } %>"
             required 
           /> 
             
           <input
             type="text"
-            class="form-control"
+            value="<% if (editing) { %><%= produk.gambarProduk %><% } %>"
+            class="form-control <%= border.find(e => e.param === 'gambarProduk') ? 'bordermerah' : '' %>"
             name="gambarProduk"
             placeholder="Masukan Gambar url"
-            id="gambarProduk"  
+            id="gambarProduk" 
             required
-            value="<% if (editing) { %><%= produk.gambarProduk %> <% } %>" 
           />  
   
           <input
@@ -32,16 +38,17 @@
             min="50"
             class="form-control"
             name="hargaProduk"
-            placeholder="<% if (editing) { %><%= produk.hargaProduk %><% } else { %>Masukan Harga Produks<% } %>"
+            placeholder="<% if (editing  || errors) { %><%= produk.hargaProduk %><% } else { %>Masukan Harga Produks<% } %>"
             id="hargaProduk"
             required
-            value="<% if (editing) { %><%= produk.hargaProduk %> <% } %>"
+            value="<% if (editing  || errors) { %><%= produk.hargaProduk %> <% } %>"
           />
 
-          <div class="form-control"> 
+          <div class="form-control <%= border.find(e => e.param === 'deskripsi') ? 'bordermerah' : '' %>"> 
             <textarea
-              placeholder="<% if (editing) { %><%= produk.deskripsi %><% } else { %>Deskripsi Produks<% } %>"
+              placeholder="<% if (editing  || errors) { %><%= produk.deskripsi %><% } else { %>Deskripsi Produks<% } %>"
               name="deskripsi"
+              class="<%= border.find(e => e.param === 'deskripsi') ? 'bordermerah' : '' %>"
               id="deskripsi"
               cols="40"
               rows="5"
@@ -50,8 +57,8 @@
             ></textarea>
           </div>
 
-          <% if (editing) { %>
-            <input type="hidden" value="<%= produk._id %>" name="idProduk">
+        <% if (editing) { %>
+        <input type="hidden" value="<%= produk._id %>" name="idProduk">
         <% } %>
         
         <% if (editing) { %>
