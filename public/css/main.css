@@ -166,6 +166,10 @@ table {
   padding-bottom: 5rem;
 }
 
+.order-body {
+  margin-bottom: -50px;
+}
+
 .detail {
   text-decoration: none;
   color: #dc3545;

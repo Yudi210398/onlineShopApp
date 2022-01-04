@@ -14,7 +14,6 @@ routerAdmin.post(
       .isLength({ min: 3 })
       .isString()
       .trim(),
-    body("gambarProduk", `input harus berupa url`).isURL(),
     body("deskripsi").isLength({ min: 3, max: 499 }).trim().isString(),
   ],
   middlerAuth,
@@ -27,7 +26,6 @@ routerAdmin.post(
       .isLength({ min: 3 })
       .isString()
       .trim(),
-    body("gambarProduk", `input harus berupa url`).isURL().trim(),
     body("deskripsi").isLength({ min: 3, max: 499 }).trim().isString().trim(),
   ],
   middlerAuth,

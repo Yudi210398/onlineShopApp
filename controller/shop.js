@@ -1,11 +1,15 @@
 const Produks = require("../model/logicDataAnys.js");
 const Order = require("../model/oder-item-sequlize.js");
+const fs = require("fs");
+const path = require("path");
+const pdfKit = require("pdfkit");
+
 exports.mainData = (req, res, next) => {
   // let isLogin = req.get("Cookie").split(";")[2].trim().split("=")[1] === `true`;
+
   // ! anyshronus data
   Produks.find()
     .then((produk) => {
-      console.log(req.user);
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
         path: `/`,
@@ -117,7 +121,6 @@ exports.postCart = (req, res, next) => {
   let dataId = req.body.produkIds;
   Produks.findById(dataId)
     .then((data) => {
-      console.log(req.user);
       return req.user.addProduk(data);
     })
     .then((data) => res.redirect("/cart"))
@@ -205,7 +208,6 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.orders = (req, res, next) => {
-  console.log(req.user);
   Order.find({ "user.userId": req.user._id })
     .then((data) => {
       res.render(`shop/orders`, {
@@ -216,4 +218,59 @@ exports.orders = (req, res, next) => {
       });
     })
     .catch((err) => console.log(err));
+};
+
+exports.invoice = async (req, res, next) => {
+  try {
+    const invoiceOrder = req.params.orderId;
+    const fileName = `invoice-${invoiceOrder}.pdf`;
+    const invoicePath = path.join("data", "invoice", fileName);
+    const userOrder = await Order.findById(invoiceOrder);
+
+    if (!userOrder) return next(new Error(`salah`));
+    if (userOrder.user.email !== req.user.email)
+      return next(new Error(`salah`));
+    // fs.readFile(invoicePath, (error, data) => {
+    //   if (error) return next(error);
+    //   res.setHeader("Content-Type", "application/pdf");
+    //   res.setHeader(
+    //     "Content-Disposition",
+    //     'attachhment; filename="' + fileName + '"'
+    //   );
+    //   res.send(data);
+    // });
+
+    // const file = fs.createReadStream(invoicePath);
+    res.setHeader(
+      "Content-Disposition",
+      'attachhment; filename="' + fileName + '"'
+    );
+    res.setHeader("Content-Type", "application/pdf");
+
+    const doc = new pdfKit();
+    doc.pipe(fs.createWriteStream(invoicePath));
+    doc.pipe(res);
+    doc
+      .text("Tagihan", {
+        align: "center",
+        underline: true,
+      })
+      .font("Times-Roman");
+    doc.moveDown();
+    userOrder.produks.forEach((data) => {
+      doc.text(
+        `${data.produk.namaProduk} : Quantity ${data.quantity}, Harga Satuan Rp.${data.produk.hargaProduk}`,
+        {
+          height: 10,
+        }
+      );
+      doc.moveDown();
+    });
+    doc.moveDown();
+    doc.text("------------------------------------------------");
+    doc.text(`Total Harga : Rp.${userOrder.totalHarga}`);
+    doc.end();
+  } catch (err) {
+    return next(err);
+  }
 };

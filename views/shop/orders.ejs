@@ -11,12 +11,15 @@
                 <% orders.forEach(order => { %>
                         <div class="card border-danger m-3 " style="max-width: 22rem;">
                             <div class="card-header bg-transparent border-danger">Bayar Sebelum : <strong> <%= order.waktuBatasPembayaran %> </strong></div>
-                            <div class="card-body">
+                            <div class="card-body order-body">
                             <p class="card-title">Kode Pembayaran : <%= order._id %> </p>
                             <br>
                             <p class="card-text">Transfer Ke : 3743859658</p>
                             <br>
                             <p class="card-text">Total Harga : Rp. <%= order.totalHarga %> </p>
+                            <br>
+                            <br>
+                            <a class="btn btn-primary btn-sm" href="/orders/<%= order._id %> ">Invoice</a>
                             </div>
                             <div class="card-footer bg-transparent border-danger">Masneno Online Shop</div>
                         </div>

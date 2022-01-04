@@ -1,6 +1,7 @@
 const Produks = require("../model/logicDataAnys.js");
 const Users = require("../model/users.js");
 const { validationResult } = require("express-validator/check");
+const deleteFiles = require("../util/deletePathGambar.js");
 exports.inputData = async (req, res, next) => {
   res.render(`admin/edit-produk`, {
     doctitle: `Input Produk Page`,
@@ -15,29 +16,45 @@ exports.inputData = async (req, res, next) => {
 
 exports.postData = (req, res, next) => {
   let namaProduk = req.body.namaProduk.trim();
-  let gambarProduk = req.body.gambarProduk;
+  let gambar = req.file;
   let hargaProduk = req.body.hargaProduk;
   let deskripsi = req.body.deskripsi;
   let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
   const error = validationResult(req);
-  console.log(error.array());
-  if (!error.isEmpty()) {
+  if (!gambar)
     return res.status(422).render(`admin/edit-produk`, {
       doctitle: `Input Produk Page`,
       path: `/admin/data-produk/`,
       editing: false,
       autentikasi: req.user,
-      datass: error.array()[0].msg,
+      datass: `file harus berupa gambar (png, jpg atau, jpeg)`,
       errors: true,
       produk: {
         namaProduk,
-        gambarProduk,
+        hargaProduk,
+        deskripsi,
+      },
+      border: [],
+    });
+
+  if (!error.isEmpty())
+    return res.status(422).render(`admin/edit-produk`, {
+      doctitle: `Input Produk Page`,
+      path: `/admin/data-produk/`,
+      editing: false,
+      autentikasi: req.user,
+      datass: error.errors[0].msg,
+      errors: true,
+      produk: {
+        namaProduk,
         hargaProduk,
         deskripsi,
       },
       border: error.array(),
     });
-  }
+
+  gambarProduk = gambar.path;
+  console.log(gambarProduk, `tete sasa`, gambar);
 
   let produks = new Produks({
     namaProduk,
@@ -55,6 +72,7 @@ exports.postData = (req, res, next) => {
       setTimeout(() => res.redirect("/"), 100);
     })
     .catch((err) => {
+      console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
@@ -115,7 +133,7 @@ exports.postEdithProduks = async (req, res, next) => {
   try {
     let datas = req.body.idProduk.trim();
     let namaProduk = req.body.namaProduk;
-    let gambarProduk = req.body.gambarProduk;
+    let gambar = req.file;
     let hargaProduk = req.body.hargaProduk;
     let deskripsi = req.body.deskripsi;
     let hargaIndo = new Intl.NumberFormat("id-ID").format(hargaProduk);
@@ -132,7 +150,6 @@ exports.postEdithProduks = async (req, res, next) => {
         errors: true,
         produk: {
           namaProduk,
-          gambarProduk,
           hargaProduk,
           deskripsi,
           _id: datas,
@@ -146,7 +163,10 @@ exports.postEdithProduks = async (req, res, next) => {
       return res.redirect("/");
 
     data.namaProduk = namaProduk;
-    data.gambarProduk = gambarProduk;
+    if (gambar) {
+      deleteFiles.deleteFile(data.gambarProduk);
+      data.gambarProduk = gambar.path;
+    }
     data.hargaProduk = hargaProduk;
     data.deskripsi = deskripsi;
     data.hargaIndo = hargaIndo;
@@ -190,6 +210,8 @@ exports.postHapusProduk = async (req, res, next) => {
     let data1 = await Produks.findById(dataIdEdit);
     if (data1.userId.toString() !== req.user._id.toString())
       return res.redirect("/admin/admin-produk");
+    console.log(data1.gambarProduk);
+    deleteFiles.deleteFile(data1.gambarProduk);
 
     data.map(async (x) => await x.deleteKeranjangAdmin(dataIdEdit));
 

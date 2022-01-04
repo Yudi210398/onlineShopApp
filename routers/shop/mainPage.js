@@ -8,6 +8,7 @@ routerMain.get("/produks", contoller.produks);
 routerMain.get("/produks/:ids", contoller.getProduct);
 routerMain.get("/cart", middlerAuth, contoller.cart);
 routerMain.get("/orders", middlerAuth, contoller.orders);
+routerMain.get("/orders/:orderId", middlerAuth, contoller.invoice);
 routerMain.post("/cart", middlerAuth, contoller.postCart);
 routerMain.post("/cart/delete-item", middlerAuth, contoller.deleteCart);
 routerMain.post("/order-data", middlerAuth, contoller.postOrder);

@@ -10,6 +10,7 @@ const mongoose = require(`mongoose`);
 const Users = require("./model/users.js");
 const sessions = require("express-session");
 const csrf = require("csurf");
+const multer = require(`multer`);
 const monggoDbSsssion = require("connect-mongodb-session")(sessions);
 const urlMongoDb =
   "mongodb+srv://yudirunat:kawasanzombi1998@cluster0.oaqmd.mongodb.net/shopOnline?retryWrites=true&w=majority";
@@ -19,13 +20,38 @@ const mongoStore = new monggoDbSsssion({
   collection: "session",
 });
 const middlerAuth = require("./middleware/authRoute.js");
+const { time } = require("console");
 
 const csrfKeamanan = csrf();
+const penyimpananFileMulter = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, `gambar`);
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().getTime().toString() + `-${file.originalname}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === `image/png` ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  )
+    return cb(null, true);
+  else cb(null, false);
+};
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/gambar", express.static(path.join(__dirname, "gambar")));
+app.use(
+  multer({ storage: penyimpananFileMulter, fileFilter: fileFilter }).single(
+    "gambar"
+  )
+);
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   sessions({
     secret: `rahasia`,

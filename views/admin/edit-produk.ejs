@@ -12,7 +12,7 @@
               <h1><%= datass %> </h1>
           </div>
       <% } %>
-        <form action="/admin/<% if (editing) { %>edit-produks<% } else { %>data<% }  %>" method="POST">
+        <form action="/admin/<% if (editing) { %>edit-produks<% } else { %>data<% }  %>" method="POST" enctype="multipart/form-data">
           <input
             type="text"
             value="<% if (editing  || errors) { %><%= produk.namaProduk %><% } %>"
@@ -23,7 +23,7 @@
             required 
           /> 
             
-          <input
+          <!-- <input
             type="text"
             value="<% if (editing) { %><%= produk.gambarProduk %><% } %>"
             class="form-control <%= border.find(e => e.param === 'gambarProduk') ? 'bordermerah' : '' %>"
@@ -31,7 +31,15 @@
             placeholder="Masukan Gambar url"
             id="gambarProduk" 
             required
-          />  
+          />   -->
+
+              <input
+            type="file"
+            class="form-control"
+            name="gambar"
+            placeholder="Masukan Gambar"
+            id="gambar"
+          />
   
           <input
             type="number"
