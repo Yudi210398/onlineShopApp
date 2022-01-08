@@ -3,21 +3,49 @@ const Order = require("../model/oder-item-sequlize.js");
 const fs = require("fs");
 const path = require("path");
 const pdfKit = require("pdfkit");
+const Users = require("../model/users.js");
+const ItemPerPage = 3;
 
-exports.mainData = (req, res, next) => {
+const pagination = (ItemPerPage, countDokument, page) => {
+  return {
+    pageSekarang: page,
+    hasNextPage: ItemPerPage * page < countDokument,
+    hasPrevious: page > 1,
+    nextPage: page + 1,
+    lastPage: page - 1,
+    lastPages: Math.ceil(countDokument / ItemPerPage),
+  };
+};
+
+exports.mainData = async (req, res, next) => {
   // let isLogin = req.get("Cookie").split(";")[2].trim().split("=")[1] === `true`;
-
-  // ! anyshronus data
-  Produks.find()
-    .then((produk) => {
+  try {
+    let page = +req.query.page || 1;
+    let countDokument = await Produks.find().countDocuments();
+    let produks = await Produks.find()
+      .skip((page - 1) * ItemPerPage)
+      .limit(ItemPerPage);
+    let dataPagination = pagination(ItemPerPage, countDokument, page);
+    if (produks)
       res.render(`shop/mainPage`, {
         doctitle: `Halaman Produk Page`,
         path: `/`,
-        produks: produk,
+        produks,
         autentikasi: req.user,
+        pageSekarang: dataPagination.pageSekarang,
+        hasNextPage: dataPagination.hasNextPage,
+        hasPrevious: dataPagination.hasPrevious,
+        nextPage: dataPagination.nextPage,
+        lastPage: dataPagination.lastPage,
+        lastPages: dataPagination.lastPages,
       });
-    })
-    .catch((err) => console.log(err));
+    else throw new Error(`meki`);
+  } catch (err) {
+    console.log(err);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 
   // ! synchronus data
   // let produk = logicInput.mintaData();
@@ -28,7 +56,34 @@ exports.mainData = (req, res, next) => {
   // });
 };
 
-exports.produks = (req, res, next) => {
+exports.produks = async (req, res, next) => {
+  try {
+    let page = +req.query.page || 1;
+    let countDokument = await Produks.find().countDocuments();
+    let produk = await Produks.find()
+      .skip((page - 1) * ItemPerPage)
+      .limit(ItemPerPage);
+    let dataPagination = pagination(ItemPerPage, countDokument, page);
+    if (produk)
+      res.render(`shop/produk-list`, {
+        doctitle: `Produk Page`,
+        path: "/produks",
+        produks: produk,
+        autentikasi: req.user,
+        pageSekarang: dataPagination.pageSekarang,
+        hasNextPage: dataPagination.hasNextPage,
+        hasPrevious: dataPagination.hasPrevious,
+        nextPage: dataPagination.nextPage,
+        lastPage: dataPagination.lastPage,
+        lastPages: dataPagination.lastPages,
+      });
+    else throw new Error(`meki`);
+  } catch (err) {
+    console.log(err);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
   // ! anyshronus data
   // DataAnys.semuaData((produk) => {
   //   res.render(`shop/produk-list`, {
@@ -38,16 +93,16 @@ exports.produks = (req, res, next) => {
   //   });
   // });
 
-  Produks.find()
-    .then((produk) => {
-      res.render(`shop/produk-list`, {
-        doctitle: `Produk Page`,
-        path: "/produks",
-        produks: produk,
-        autentikasi: req.user,
-      });
-    })
-    .catch((err) => console.log(err));
+  // Produks.find()
+  //   .then((produk) => {
+  //     res.render(`shop/produk-list`, {
+  //       doctitle: `Produk Page`,
+  //       path: "/produks",
+  //       produks: produk,
+  //       autentikasi: req.user,
+  //     });
+  //   })
+  //   .catch((err) => console.log(err));
 
   // ! synchronus data
   // let produk = logicInput.mintaData();

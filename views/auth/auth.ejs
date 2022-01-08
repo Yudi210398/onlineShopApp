@@ -31,14 +31,22 @@
                 </div>
             <% } %>
 
+            <% if (datass) { %>
+                <div class="alert alert-danger" role="alert">
+                    <h1><%= datass %> </h1>
+                </div>
+            <% } %>
+
             <form action="/login" method="POST">
                 <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" value="" name="email" required placeholder="Masukan email">
+                <input type="email" class="form-control" id="email" value="<% if (errors) { %> <%= inputLama.email %> 
+                <% } %>" name="email" required placeholder="Masukan email">
                 </div>
                 <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="paslogin" required placeholder="Masukan Password" class="form-control" id="username1">
+                <input type="password" name="paslogin" required placeholder="Masukan Password" class="form-control" 
+                id="username1" value="<% if (errors) { %><%= inputLama.paslogin %><% } %>">
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit" class="btn btn-primary ms-auto">Login</button>

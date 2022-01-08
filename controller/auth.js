@@ -13,6 +13,10 @@ exports.login = (req, res, next) => {
     doctitle: `Login`,
     path: "/login",
     autentikasi: req.session.user,
+    datass: false,
+    errors: false,
+    inputLama: { email: "", paslogin: "" },
+    border: [],
   });
 };
 
@@ -43,9 +47,21 @@ exports.postData = async (req, res, next) => {
   try {
     const email = req.body.email;
     const paslogin = req.body.paslogin;
+    let error = validationResult(req);
+    if (!error.isEmpty())
+      return res.status(422).render(`auth/auth`, {
+        doctitle: `Login`,
+        path: "/login",
+        autentikasi: req.session.user,
+        datass: error.array()[0].msg,
+        inputLama: { email, paslogin },
+        border: error.array(),
+        errors: true,
+      });
+
     let users = await Users.findOne({ email });
 
-    let hasilPass = await encryptPassword.compare(paslogin, users.password);
+    let hasilPass = await encryptPassword.compare(paslogin, users?.password);
     if (hasilPass) {
       req.session.user = users;
       return await req.session.save(() => res.redirect("/"));

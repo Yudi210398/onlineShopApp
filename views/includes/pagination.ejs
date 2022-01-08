@@ -1,0 +1,30 @@
+<nav aria-label="..." class="d-flex justify-content-center">
+  <ul class="pagination">
+    <li class="page-item">
+      <% if (pageSekarang !== 1&& lastPage !== 1 ) { %>
+      <a class="page-link" href="?page=1">First Page</a>
+    </li>
+    <% } %> <% if (pageSekarang <= lastPages) { %> <% if (lastPage !== 0 ) { %>
+    <li class="page-item">
+      <a class="page-link" href="?page=<%= lastPage %> "><%= lastPage %> </a>
+    </li>
+    <% } %>
+
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="?page=<%= pageSekarang %> "
+        ><%= pageSekarang %>
+      </a>
+    </li>
+    <li class="page-item">
+      <% if (hasNextPage) { %>
+      <a class="page-link" href="?page=<%= nextPage %> "> <%= nextPage %> </a>
+      <% } %>
+    </li>
+    <% } %>
+    <li class="page-item">
+      <% if (lastPages !== pageSekarang && nextPage !== lastPages ) { %>
+      <a class="page-link" href="?page=<%= lastPages %> ">Last Page </a>
+      <% } %>
+    </li>
+  </ul>
+</nav>

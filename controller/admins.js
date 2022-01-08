@@ -54,7 +54,6 @@ exports.postData = (req, res, next) => {
     });
 
   gambarProduk = gambar.path;
-  console.log(gambarProduk, `tete sasa`, gambar);
 
   let produks = new Produks({
     namaProduk,

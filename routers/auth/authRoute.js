@@ -8,7 +8,20 @@ routerAuth.get("/login", contoller.login);
 routerAuth.get("/daftar", contoller.getDaftar);
 routerAuth.get("/resetpass", contoller.getReset);
 routerAuth.get("/reset/:token", contoller.newPassword);
-routerAuth.post("/login", contoller.postData);
+routerAuth.post(
+  "/login",
+  [
+    expValidator
+      .body("email")
+      .isEmail()
+      .custom(async (value, { req }) => {
+        let users = await Users.findOne({ email: value });
+        if (!users)
+          return Promise.reject("Email belum terdaftar, silahkan daftar dulu");
+      }),
+  ],
+  contoller.postData
+);
 routerAuth.post("/logout", contoller.postLogout);
 routerAuth.post(
   "/daftar",
